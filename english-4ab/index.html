@@ -968,6 +968,8 @@ const nav = document.querySelector("nav");
 nav.innerHTML = TAB_DEFS.map(t => `<button data-tab="${t[0]}" style="--on:${t[4]}"><span class="ic">${t[1]}</span><span>${t[2]}</span></button>`).join("");
 function openTab(t){
   tab = t; clearInterval(blitzTimer); keyHandler = null; mix = null;
+  // A focused tab or chip would also get the game's Enter/Space and restart the round.
+  document.activeElement.blur();
   stage.classList.remove("flashbg-ok","flashbg-bad");
   nav.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
   setbar.style.visibility = (t === "rules" || t === "progress" || t === "fix") ? "hidden" : "visible";
