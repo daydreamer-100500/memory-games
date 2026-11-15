@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Idioms">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#fff8ef">
+<title>English: Everyday Idioms — гра</title>
+<style>
+:root{
+  --bg:#fff8ef; --card:#ffffff; --ink:#2b2350; --muted:#7a7399;
+  --pink:#ff4f8b; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2ec4b6; --lime:#7bd84a;
+  --blue:#3a86ff; --violet:#8338ec; --red:#ef476f;
+  --shadow:0 6px 0 rgba(43,35,80,.12), 0 12px 28px rgba(43,35,80,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);
+  background:radial-gradient(circle at 10% 0%,#ffe3f1 0,transparent 40%),radial-gradient(circle at 90% 10%,#dff3ff 0,transparent 40%),radial-gradient(circle at 50% 100%,#e6ffe9 0,transparent 45%),var(--bg);
+  min-height:100vh}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:14px 20px;max-width:1100px;margin:0 auto}
+h1{margin:0;font-size:28px;letter-spacing:.5px}
+h1 .acc{color:var(--pink)}
+.home{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);text-decoration:none;font-size:22px;flex:none}
+.stats{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+.pill{background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700;box-shadow:var(--shadow);font-size:15px}
+.bar{max-width:1100px;margin:0 auto 6px;padding:0 20px}
+.progress{height:14px;background:#ece6ff;border-radius:999px;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--pink),var(--orange),var(--yellow),var(--lime),var(--green));transition:width .5s}
+.progress-label{font-size:13px;color:var(--muted);margin-top:4px}
+nav{display:flex;flex-wrap:wrap;gap:10px;max-width:1100px;margin:12px auto;padding:0 20px}
+nav button{border:0;border-radius:16px;padding:12px 16px;font-size:16px;font-weight:700;cursor:pointer;background:var(--card);color:var(--ink);box-shadow:var(--shadow);transition:transform .1s}
+nav button.on{color:#fff}
+nav button.on{background:var(--on)}
+.setbar{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.setbar .lbl{font-weight:700;color:var(--muted);margin-right:4px}
+.chip{border:2px solid #e2dcf5;background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;font-weight:600;color:var(--ink)}
+.chip.on{border-color:var(--violet);background:#f1e8ff}
+main{max-width:1100px;margin:16px auto 60px;padding:0 20px}
+.stage{background:var(--card);border-radius:28px;box-shadow:var(--shadow);padding:28px;min-height:420px;position:relative;overflow:hidden}
+.center{text-align:center}
+.muted{color:var(--muted)}
+.big-word{font-size:clamp(40px,8vw,84px);font-weight:800;letter-spacing:2px;margin:20px 0 6px;line-height:1.25}
+.st{color:var(--pink);display:inline-block;transform:scale(1.35);transform-origin:bottom;text-shadow:0 0 18px rgba(255,79,139,.55);animation:pulse 1.4s ease-in-out infinite;margin:0 .06em}
+@keyframes pulse{0%,100%{transform:scale(1.35)}50%{transform:scale(1.55)}}
+.note{font-size:20px;color:var(--muted);margin-bottom:8px}
+.hint{display:inline-block;background:#fff4c2;border:2px dashed var(--orange);border-radius:16px;padding:10px 16px;font-size:18px;margin-top:10px}
+.group-tag{display:inline-block;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;color:#fff;margin-top:12px}
+.btn{border:0;border-radius:18px;padding:14px 22px;font-size:18px;font-weight:800;cursor:pointer;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.18);transition:transform .08s}
+.btn .kbd{color:var(--ink)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.btn.g{background:var(--green)} .btn.r{background:var(--red)} .btn.v{background:var(--violet)} .btn.o{background:var(--orange)} .btn.b{background:var(--blue)} .btn.p{background:var(--pink)}
+.row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.flash{perspective:1200px;max-width:640px;margin:10px auto;cursor:pointer}
+.flash-inner{position:relative;display:grid;min-height:290px;transition:transform .6s;transform-style:preserve-3d}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.front{background:linear-gradient(135deg,#efe5ff,#ffe6f2)}
+.back{background:linear-gradient(135deg,#e2fff6,#fff6d6);transform:rotateY(180deg)}
+.face .big-word{margin:6px 0}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:26px 0 10px}
+.tile{min-width:58px;height:74px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;background:#f3f0fb;color:#b7b0d1;user-select:none}
+.tile.vow{background:linear-gradient(180deg,#fff,#efe7ff);color:var(--ink);cursor:pointer;box-shadow:0 5px 0 #d9cff5;transition:transform .1s}
+.tile.sp{background:transparent;min-width:18px}
+.tile.ok{background:var(--green)!important;color:#fff!important;box-shadow:0 0 24px var(--green)!important;transform:scale(1.15)}
+.tile.bad{background:var(--red)!important;color:#fff!important;animation:shake .4s}
+.tile.show{background:var(--yellow)!important;color:var(--ink)!important;box-shadow:0 0 24px var(--yellow)!important}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;max-width:820px;margin:26px auto 0}
+.opt{border:3px solid #e6e0f7;background:#fff;border-radius:20px;padding:18px;font-size:34px;font-weight:800;cursor:pointer;color:var(--ink);transition:transform .1s}
+.opt .k{display:block;font-size:13px;color:var(--muted);font-weight:600}
+.opt.ok{border-color:var(--green);background:#dcfff8}
+.opt.bad{border-color:var(--red);background:#ffe3ea;animation:shake .4s}
+.opt .st{animation:none;transform:scale(1.25)}
+.counter{position:absolute;top:18px;left:24px;font-weight:800;color:var(--muted)}
+.combo{position:absolute;top:18px;right:24px;font-weight:800;color:var(--orange);font-size:20px}
+.timer{height:12px;border-radius:999px;background:#ffe9cf;overflow:hidden;max-width:640px;margin:8px auto 0}
+.timer>div{height:100%;background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow));transition:width .2s linear}
+.blitz-word{font-size:clamp(44px,9vw,92px);font-weight:900;margin:34px 0 10px}
+.blitz-word .st{animation:none;transform:scale(1.3);color:var(--violet);text-shadow:0 0 16px rgba(131,56,236,.45)}
+.flashbg-ok{animation:okflash .45s}
+.flashbg-bad{animation:badflash .45s}
+@keyframes okflash{0%{background:#c9fff0}100%{background:#fff}}
+@keyframes badflash{0%{background:#ffd3de}100%{background:#fff}}
+.kbd{display:inline-block;border:2px solid #d8d1ef;border-bottom-width:4px;border-radius:8px;padding:1px 8px;font-size:13px;font-weight:700;background:#fff}
+.summary h2{font-size:34px;margin:6px 0}
+.stars{font-size:46px;letter-spacing:6px}
+.mist{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px}
+.mist span{background:#fff0f4;border:2px solid #ffc2d2;border-radius:14px;padding:8px 12px;font-size:22px;font-weight:800}
+.mist .st{animation:none;transform:scale(1.2)}
+.rules{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.rule{border-radius:22px;padding:18px;color:var(--ink);box-shadow:var(--shadow);background:#fff;border-top:10px solid var(--c)}
+.rule h3{margin:0 0 6px;font-size:21px}
+.rule p{margin:0 0 10px;color:var(--muted);font-size:15px}
+.rule .ws{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.rule .ws span{background:#f7f4ff;border-radius:10px;padding:4px 9px;font-weight:700;font-size:17px}
+.rule .ws .st{animation:none;transform:scale(1.2);color:var(--c);text-shadow:none}
+.rule .btn{font-size:15px;padding:10px 14px;background:var(--c)}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.wchip{border-radius:12px;padding:8px 12px;font-weight:800;font-size:17px;cursor:pointer;border:0;color:var(--ink)}
+.wchip .st{animation:none;transform:scale(1.15);text-shadow:none;color:inherit}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 18px;font-size:14px}
+.legend i{display:inline-block;width:16px;height:16px;border-radius:5px;vertical-align:-3px;margin-right:5px}
+.lv0{background:#eeeaf7}.lv1{background:#ffc9d6}.lv2{background:#ffd9a8}.lv3{background:#fff1a3}.lv4{background:#c8f3a8}.lv5{background:#8de3d9}
+.tip{background:#eef7ff;border-radius:18px;padding:14px 18px;margin-bottom:18px;font-size:16px;line-height:1.5}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-120px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;z-index:60;transition:transform .3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.small{font-size:14px}
+.champ{position:fixed;inset:0;z-index:40;background:rgba(40,20,70,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.champ>div{background:#fff;border-radius:28px;padding:28px 24px;text-align:center;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:champIn .6s cubic-bezier(.2,1.6,.4,1)}
+.champ h2{font-size:30px;margin:8px 0}
+.champ .trophy{font-size:96px;animation:trophy 1.2s ease-in-out infinite}
+@keyframes champIn{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes trophy{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.15)}}
+.ex{font-style:italic;color:var(--muted);font-size:17px;margin-top:6px}
+.say{border:0;background:#eef7ff;border-radius:999px;font-size:22px;padding:6px 12px;cursor:pointer;margin:4px}
+.ans{display:block;width:100%;max-width:460px;margin:22px auto 0;font:inherit;font-size:28px;font-weight:800;text-align:center;padding:12px;border:3px solid #e6e0f7;border-radius:18px;color:var(--ink);outline:none}
+.ans:focus{border-color:var(--violet)}
+.ans.ok{border-color:var(--green);background:#dcfff8}
+.ans.bad{border-color:var(--red);background:#ffe3ea;animation:shake .4s}
+b.miss{color:var(--red);text-decoration:underline}
+.okc{color:var(--green)}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:720px;margin:20px auto 0}
+.match>div{display:flex;flex-direction:column;gap:10px}
+.mt{border:3px solid #e6e0f7;background:#fff;border-radius:16px;padding:14px 8px;font:inherit;font-weight:800;font-size:min(22px,calc((50vw - 40px) / (var(--n,8) * .62)));cursor:pointer;color:var(--ink);white-space:nowrap;overflow:hidden}
+.mt.sel{border-color:var(--violet);background:#f1e8ff}
+.mt.done{border-color:var(--green);background:#dcfff8;opacity:.55;cursor:default}
+.mt.bad{border-color:var(--red);animation:shake .4s}
+.kind-pairs .big-word,.kind-pairs .mid{letter-spacing:0}
+
+/* ---------- mobile / iPhone ---------- */
+html{-webkit-text-size-adjust:100%}
+body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;-webkit-user-select:none;user-select:none}
+.face{-webkit-backface-visibility:hidden}
+.big-word,.blitz-word{font-size:min(84px,calc((100vw - 70px) / (var(--n,8) * .66)));white-space:nowrap}
+.blitz-word{font-size:min(92px,calc((100vw - 60px) / (var(--n,8) * .66)))}
+.opt{font-size:min(34px,calc((100vw - 90px) / (var(--n,8) * .66)));white-space:nowrap}
+.tiles{flex-wrap:nowrap;gap:4px}
+.tile{min-width:0;width:auto;height:auto;font-size:var(--fs,40px);padding:.3em .02em;min-height:2.1em;border-radius:.3em;background:transparent}
+.tile.vow{min-width:1em;padding:.3em .12em}
+.tile.vow{position:relative}
+.tile.vow::after{content:"";position:absolute;inset:-10px -5px}
+.mid{font-size:min(48px,calc((100vw - 70px) / (var(--n,8) * .66)))!important}
+.tile.sp{min-width:.3em}
+.kind-pairs .big-word,.kind-pairs .blitz-word,.kind-pairs .opt,.kind-pairs .mt{white-space:normal;overflow-wrap:break-word;line-height:1.2}
+.fit{display:block;container-type:inline-size}
+.art{background:#fff4c2;color:#e07a00;border-radius:.2em;padding:0 .15em}
+.kind-pairs .opts{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));max-width:640px}
+.kind-pairs .opt,.kind-pairs .mt{overflow-wrap:normal}
+.kind-pairs .opt{--room:calc(100vw - 90px);--fmax:34px}
+.kind-pairs .mt{--room:calc(50vw - 40px);--fmax:22px}
+.kind-pairs .fit>span{display:block;font-size:min(var(--fmax),calc(100cqi / (var(--w,8) * .68)),calc(var(--room) / (var(--n,8) * .66)))}
+.kind-pairs .flash .big-word{font-size:min(64px,calc((min(100vw,640px) - 70px) / (var(--n,8) * .66)))}
+@media (hover:hover){
+  .tile.vow:hover{transform:translateY(-4px) scale(1.06);background:#fff1f7}
+  .opt:hover{transform:translateY(-3px);border-color:var(--blue)}
+  nav button:hover{transform:translateY(-2px)}
+}
+@media (hover:none){
+  .tile.vow:hover,.opt:hover,nav button:hover{transform:none}
+  .kbd,.keys{display:none!important}
+}
+@media (max-width:700px){
+  header{padding:calc(10px + env(safe-area-inset-top)) 14px 6px}
+  header{gap:8px}
+  h1{font-size:20px}
+  .home{width:34px;height:34px;font-size:18px;border-radius:11px}
+  .stats{gap:5px;margin-left:auto}
+  .pill{padding:5px 8px;font-size:12px;box-shadow:0 3px 0 rgba(43,35,80,.1)}
+  .pill .w{display:none}
+  .bar{padding:0 14px}
+  .progress-label{font-size:12px}
+  nav{position:fixed;left:0;right:0;bottom:0;margin:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:2px;flex-wrap:nowrap;background:rgba(255,255,255,.96);box-shadow:0 -4px 18px rgba(43,35,80,.12);z-index:40;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  nav button{flex:1;padding:6px 2px;font-size:11px;border-radius:12px;box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+  nav button .ic{font-size:22px}
+  .setbar{flex-wrap:nowrap;overflow-x:auto;padding:6px 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .setbar::-webkit-scrollbar{display:none}
+  .chip{white-space:nowrap;flex:none}
+  main{margin:8px auto calc(90px + env(safe-area-inset-bottom));padding:0 10px}
+  .stage{padding:44px 14px 20px;border-radius:22px;min-height:60vh}
+  .counter{top:14px;left:16px}
+  .combo{top:12px;right:16px}
+  .flash-inner{min-height:230px}
+  .stage>.center.small{font-size:13px}
+  .hint{font-size:16px;padding:8px 12px}
+  .note{font-size:16px}
+  .row{gap:10px}
+  .row .btn{flex:1;min-width:130px;padding:16px 10px}
+  .opts{grid-template-columns:1fr;gap:10px;margin-top:16px}
+  .opt{padding:14px}
+  .blitz-word{margin:24px 0 8px}
+  .rules{grid-template-columns:1fr}
+  .tip{font-size:15px}
+  .wchip{font-size:15px;padding:7px 10px}
+  .stars{font-size:38px}
+  .summary h2{font-size:28px}
+  .mist span{font-size:18px}
+  .match{gap:8px;margin-top:12px}
+  .match>div{gap:8px}
+  .mt{padding:10px 6px}
+}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="toast" id="toast"></div>
+
+<header>
+  <h1 id="title"></h1>
+  <div class="stats">
+    <div class="pill" title="Очки досвіду">⭐ <span id="xp">0</span> XP</div>
+    <div class="pill" title="Днів поспіль">🔥 <span id="days">0</span> дн.</div>
+    <div class="pill" title="Найкращий бліц">⚡ <span class="w">рекорд </span><span id="best">0</span></div>
+  </div>
+</header>
+<div class="bar">
+  <div class="progress"><div id="prog" style="width:0"></div></div>
+  <div class="progress-label" id="progLabel"></div>
+</div>
+
+<nav></nav>
+
+<div class="setbar" id="setbar"></div>
+
+<main><div class="stage" id="stage"></div></main>
+
+<script>
+window.GAME = {
+  slug: "english-idioms",
+  title: "English: Everyday Idioms",
+  short: "Idioms",
+  emoji: "💬",
+  kind: "pairs",
+  feminine: false,
+  speak: "en-US",
+  frontName: "фразу англійською",
+  groups: {
+    time:   {name:"⏰ Час", c:"#3a86ff", rule:"Фрази про час: скоро, пізніше, в останню хвилину. around the corner = вже зовсім близько."},
+    trouble:{name:"🆘 Халепа", c:"#e63946", rule:"Коли все погано: in a jam, in a tight spot, broke (без грошей)."},
+    mood:   {name:"😮‍💨 Почуття", c:"#7b61ff", rule:"Як ти себе почуваєш: beat (дуже втомлений), on edge (нервовий), had enough (досить)."},
+    act:    {name:"🎯 Дії і рішення", c:"#ff9f1c", rule:"Почати, спробувати, закінчити, вирішити: give it a shot, call it a day, up to you."},
+    people: {name:"🤝 Люди і зв'язок", c:"#2ec4b6", rule:"Спілкування з людьми: see eye to eye, keep in touch, neck of the woods."}
+  },
+  items: [
+    {f:"We will be there in no time", b:"very soon or very quickly", g:"time", h:"дуже скоро, миттю", ex:"Don't worry, we will be there in no time."},
+    {f:"Time will tell", b:"The future will show us the answer.", g:"time", h:"час покаже", ex:"Will the plan work? Time will tell."},
+    {f:"when you get a chance", b:"when you have time", g:"time", h:"коли будеш мати час", ex:"Call me back when you get a chance."},
+    {f:"Winter is just around the corner", b:"coming soon", g:"time", h:"зима вже не за горами", ex:"Buy a warm coat. Winter is just around the corner."},
+    {f:"Let’s call it a day", b:"Let’s stop working for today.", g:"act", h:"на сьогодні досить", ex:"It's 7 pm. Let's call it a day."},
+    {f:"take it easy", b:"relax and do not worry about anything", g:"mood", h:"не переймайся, розслабся", ex:"Take it easy. Everything will be fine."},
+    {f:"on the right track", b:"going in the right direction", g:"act", h:"на правильному шляху", ex:"Your project is on the right track."},
+    {f:"He’s broke", b:"He has no money.", g:"trouble", h:"він без грошей", ex:"He can't go out tonight. He's broke."},
+    {f:"in a jam", b:"in a very difficult situation", g:"trouble", h:"у халепі", ex:"I'm in a jam. I lost my keys."},
+    {f:"I’m beat", b:"I’m exhausted. / I’m dead tired. / I’m dead on my feet.", g:"mood", h:"я дуже втомився", ex:"I worked for 12 hours. I'm beat."},
+    {f:"I’ve had enough", b:"I can’t take it any more.", g:"mood", h:"з мене досить", ex:"Stop the noise! I've had enough."},
+    {f:"at the last minute", b:"just before the deadline", g:"time", h:"в останню хвилину", ex:"He always does his homework at the last minute."},
+    {f:"in a tight spot", b:"in a situation with limited options", g:"trouble", h:"у скрутному становищі", ex:"Without a car, we are in a tight spot."},
+    {f:"We don’t see eye to eye", b:"We don’t agree with each other.", g:"people", h:"ми не погоджуємося", ex:"We are friends, but we don't see eye to eye on politics."},
+    {f:"I’m in your neck of the woods", b:"I’m in your area / I’m somewhere near where you live or work.", g:"people", h:"я у твоїх краях", ex:"I'm in your neck of the woods. Let's have coffee."},
+    {f:"I couldn’t care less", b:"I don’t care at all.", g:"mood", h:"мені абсолютно байдуже", ex:"Rain or sun? I couldn't care less."},
+    {f:"I’ve been on edge all day because of the upcoming interview", b:"nervous and anxious, especially because you are expecting something unpleasant to happen", g:"mood", h:"on edge = на нервах"},
+    {f:"give it a shot", b:"try it", g:"act", h:"спробуй", ex:"You can do it. Give it a shot!"},
+    {f:"It’s up to you", b:"It’s your decision.", g:"act", h:"вирішуй сам", ex:"Pizza or pasta? It's up to you."},
+    {f:"to keep in touch", b:"to stay in contact", g:"people", h:"бути на зв'язку", ex:"Let's keep in touch after the course."}
+  ]
+};
+window.GAME_HOME = "../";
+</script>
+<script>
+const G = window.GAME;
+const FEM = !!G.feminine;
+const gx = (m, f) => FEM ? f : m;
+const STRESS = G.kind === "stress";
+const VOW = "аеєиіїоуюяАЕЄИІЇОУЮЯ";
+const GROUPS = G.groups || {};
+const HAS_GROUPS = Object.keys(GROUPS).length > 0;
+document.body.classList.add(STRESS ? "kind-stress" : "kind-pairs");
+document.title = G.title + " — гра";
+
+// Drawn on canvas, not SVG: iOS home screen needs a PNG, and emoji inside an SVG icon fail in Safari.
+function drawIcon(px, r){
+  const c = document.createElement("canvas"); c.width = c.height = px;
+  const x = c.getContext("2d"); x.scale(px / 100, px / 100);
+  const bg = x.createLinearGradient(0, 0, 100, 100);
+  ["#ff4f8b", "#ff9f1c", "#ffd23f", "#2ec4b6"].forEach((col, k) => bg.addColorStop(k / 3, col));
+  x.fillStyle = bg; x.beginPath(); x.roundRect(0, 0, 100, 100, r); x.fill();
+  const card = (deg, fill, shadow) => {
+    x.save(); x.translate(50, 52); x.rotate(deg * Math.PI / 180);
+    x.shadowColor = shadow; x.shadowBlur = 6; x.shadowOffsetY = 3;
+    x.fillStyle = fill; x.beginPath(); x.roundRect(-27, -33, 54, 66, 10); x.fill();
+    x.restore();
+  };
+  card(14, "rgba(255,255,255,.55)", "transparent");
+  card(-6, "#fff", "rgba(60,20,80,.35)");
+  x.save(); x.translate(50, 52); x.rotate(-6 * Math.PI / 180);
+  x.font = "34px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif";
+  x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(G.emoji || "🧠", 0, -5);
+  const bar = x.createLinearGradient(-18, 0, 18, 0);
+  bar.addColorStop(0, "#ff4f8b"); bar.addColorStop(1, "#2ec4b6");
+  x.fillStyle = "#eee6f5"; x.beginPath(); x.roundRect(-18, 18, 36, 6, 3); x.fill();
+  x.fillStyle = bar; x.beginPath(); x.roundRect(-18, 18, 26, 6, 3); x.fill();
+  x.restore();
+  x.fillStyle = "#fff"; x.font = "bold 20px sans-serif"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("✦", 84, 15);
+  return c.toDataURL("image/png");
+}
+// iOS rounds the corners itself and paints transparent pixels black, so its icon is a full square.
+[["icon", 64, 22], ["apple-touch-icon", 180, 0]].forEach(([rel, px, r]) => {
+  const l = document.createElement("link"); l.rel = rel; l.href = drawIcon(px, r); document.head.appendChild(l);
+});
+
+function esc(t){ return String(t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+// Stress items: "+" right after the stressed vowel; two "+" mean both stresses are correct.
+const ITEMS = G.items.map((r, i) => {
+  let word = "", stress = [];
+  if (STRESS) {
+    for (const ch of r.w) {
+      if (ch === "+") { stress.push(word.length - 1); } else { word += ch; }
+    }
+  } else {
+    word = r.f;
+  }
+  return {id:i, key: STRESS ? r.w : r.f + "|" + r.b, word, stress, back:r.b || "", note:r.note || "", group:r.g || "", hint:r.h || "", ex:r.ex || ""};
+});
+
+const STORE = G.slug + "_v1";
+let S = JSON.parse(localStorage.getItem(STORE) || "null") || {box:{}, xp:0, best:0, days:0, last:""};
+S.miss = S.miss || {};
+S.fail = S.fail || {};
+S.proved = S.proved || {};
+function save(){ localStorage.setItem(STORE, JSON.stringify(S)); }
+// A word counts as learned only after one clean answer in the proof mode (Напиши / Тицьни) and with no open mistakes.
+const PROOF_MODE = STRESS ? "click" : "type";
+function rawBox(w){ return S.box[w.key] || 0; }
+function blocked(w){ return !!S.fail[w.key] || !S.proved[w.key]; }
+function box(w){ return Math.min(rawBox(w), blocked(w) ? 3 : 5); }
+// A mistake is remembered per game type. Пари and Бліц cannot show one word, so their mistakes are fixed in Напиши (pairs) or Картки (stress).
+const FIX_MODE = {match: STRESS ? "learn" : "type", blitz: STRESS ? "learn" : "type"};
+function setBox(w, ok, mode){
+  if (ok && mode === PROOF_MODE) { S.proved[w.key] = 1; }
+  const m = FIX_MODE[mode] || mode, f = S.fail[w.key] = S.fail[w.key] || {};
+  if (ok) { delete f[m]; } else { f[m] = 1; }
+  if (!Object.keys(f).length) { delete S.fail[w.key]; }
+  const b = rawBox(w);
+  S.box[w.key] = ok ? Math.min(5, b + 1) : Math.max(1, b - 2);
+  if (ok) { delete S.miss[w.key]; } else { S.miss[w.key] = 1; }
+  save();
+  checkChampion();
+}
+// Celebrate once when every word reaches "знаю напам'ять"; a later slip re-arms it.
+function checkChampion(){
+  const all = ITEMS.every(w => box(w) === 5);
+  if (all && !S.champion) { S.champion = 1; save(); setTimeout(celebrate, 700); }
+  if (!all && S.champion) { S.champion = 0; save(); }
+}
+function celebrate(){
+  [0, 600, 1200, 1800, 2400].forEach(t => setTimeout(() => confetti(160), t));
+  [0, 250, 500].forEach(t => setTimeout(() => beep(true), t));
+  const d = document.createElement("div");
+  d.className = "champ";
+  d.innerHTML = `<div><div class="trophy">🏆</div><h2>Усі ${ITEMS.length} — знаю напам'ять!</h2>
+    <p class="muted">Ти ${gx("вивчив", "вивчила")} увесь список. ${gx("Молодець", "Молодчина")}! 🎉</p>
+    <button class="btn p">🥳 Ура!</button></div>`;
+  document.body.appendChild(d);
+  d.querySelector("button").onclick = () => d.remove();
+}
+function addXp(n){ S.xp += n; save(); renderStats(); }
+function touchDay(){
+  const today = new Date().toISOString().slice(0,10);
+  if (S.last === today) { return; }
+  const y = new Date(Date.now() - 864e5).toISOString().slice(0,10);
+  S.days = S.last === y ? S.days + 1 : 1;
+  S.last = today; save(); renderStats();
+}
+
+// ---------- rendering helpers ----------
+function stressHtml(w, cls = "st"){
+  let out = "";
+  [...w.word].forEach((ch, i) => {
+    out += w.stress.includes(i) ? `<span class="${cls}">${ch}́</span>` : esc(ch);
+  });
+  return out;
+}
+function fakeHtml(w, idx){ return stressHtml({word:w.word, stress:[idx]}); }
+function vowelIdx(w){ return [...w.word].map((c,i) => VOW.includes(c) ? i : -1).filter(i => i >= 0); }
+function wrongIdx(w){ return vowelIdx(w).filter(i => !w.stress.includes(i)); }
+function shuffle(a){ for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function answerHtml(w){ return STRESS ? stressHtml(w) : `${esc(w.word)} — ${esc(w.back)}`; }
+function nAttr(t){ const len = String(t).length; return `style="--n:${STRESS ? Math.min(len, 40) : len <= 12 ? len : Math.min(12 + (len - 12) / 3, 22)}"`; }
+function fitHtml(t){ const w = Math.max(6, ...String(t).split(/\s+/).map(x => x.length)); return `<span class="fit" style="--w:${w}"><span>${esc(t)}</span></span>`; }
+function noteHtml(w){ return w.note ? `<div class="note">(${esc(w.note)})</div>` : ""; }
+function hintHtml(w){ return (w.ex ? `<div class="ex">“${esc(w.ex)}”</div>` : "") + (w.hint ? `<div class="hint">💡 ${esc(w.hint)}</div>` : ""); }
+function groupTag(w){ const g = GROUPS[w.group]; return g ? `<span class="group-tag" style="background:${g.c}">${esc(g.name)}</span>` : ""; }
+function sayBtn(text){ return G.speak && window.speechSynthesis ? `<button class="say" data-say="${esc(text)}" title="Послухати">🔊</button>` : ""; }
+function speak(text){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = G.speak; u.rate = .9;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-say]");
+  if (b) { e.stopPropagation(); speak(b.dataset.say); }
+}, true);
+
+// ---------- word sets ----------
+const CHUNK = Math.ceil(ITEMS.length / Math.max(1, Math.round(ITEMS.length / 25)));
+const RANGES = [];
+for (let i = 0; i < ITEMS.length; i += CHUNK) {
+  const part = ITEMS.slice(i, i + CHUNK);
+  if (ITEMS.length > CHUNK) { RANGES.push({id:"r" + i, name:`${part[0].word.slice(0,2)} – ${part[part.length-1].word.slice(0,2)}`, items:part}); }
+}
+const SETS = [
+  {id:"all", name:"Усі"},
+  {id:"weak", name:"😬 Слабкі"},
+  {id:"new", name:gx("🆕 Ще не бачив", "🆕 Ще не бачила")},
+  ...RANGES
+];
+let curSet = "all";
+const weakItems = () => ITEMS.filter(w => box(w) > 0 && box(w) < 3);
+const newItems = () => ITEMS.filter(w => box(w) === 0);
+function pool(){
+  let p;
+  if (curSet === "weak") { p = weakItems(); }
+  else if (curSet === "new") { p = newItems(); }
+  else if (curSet.startsWith("g:")) { p = ITEMS.filter(w => w.group === curSet.slice(2)); }
+  else if (curSet.startsWith("r")) { p = RANGES.find(r => r.id === curSet).items; }
+  else { p = ITEMS; }
+  return p.length ? p : ITEMS;
+}
+// Priority: wrong last time, then never seen, then lowest box. Random inside each level.
+function rank(w){ return S.miss[w.key] ? 0 : box(w) === 0 ? 1 : box(w) + 1; }
+function pickRound(n, avoid){
+  let p = pool().filter(w => w !== avoid);
+  if (!p.length) { p = pool(); }
+  p = shuffle(p.slice()).sort((a, b) => rank(a) - rank(b));
+  return shuffle(p.slice(0, n));
+}
+function distractors(w, n){
+  const same = shuffle(ITEMS.filter(x => x !== w && x.group === w.group && x.back !== w.back && x.word !== w.word));
+  const other = shuffle(ITEMS.filter(x => x !== w && x.group !== w.group && x.back !== w.back && x.word !== w.word));
+  return [...same, ...other].slice(0, n);
+}
+function renderSetbar(){
+  const groupName = curSet.startsWith("g:") ? GROUPS[curSet.slice(2)].name : null;
+  let h = `<span class="lbl">${STRESS ? "Слова" : "Набір"}:</span>`;
+  SETS.forEach(s => {
+    const cnt = s.id === "weak" ? ` (${weakItems().length})` : s.id === "new" ? ` (${newItems().length})` : "";
+    h += `<button class="chip ${curSet === s.id ? "on" : ""}" data-set="${s.id}">${esc(s.name)}${cnt}</button>`;
+  });
+  if (groupName) { h += `<button class="chip on" data-set="${curSet}">${esc(groupName)}</button>`; }
+  setbar.innerHTML = h;
+  setbar.querySelectorAll(".chip").forEach(b => b.onclick = () => { curSet = b.dataset.set; renderSetbar(); openTab(tab); });
+}
+
+// ---------- stats ----------
+function renderStats(){
+  xp.textContent = S.xp; best.textContent = S.best; days.textContent = S.days;
+  const learned = ITEMS.filter(w => box(w) >= 4).length;
+  prog.style.width = (learned / ITEMS.length * 100) + "%";
+  progLabel.textContent = `Вивчено ${learned} з ${ITEMS.length}` + (innerWidth > 700 ? ` (вивчене — 4 правильні відповіді, немає помилок і хоч раз ${STRESS ? gx("тицьнув", "тицьнула") : gx("написав", "написала")} правильно)` : "");
+}
+
+// ---------- effects ----------
+const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
+let parts = [];
+function resize(){ fx.width = innerWidth; fx.height = innerHeight; }
+addEventListener("resize", resize); resize();
+function confetti(n = 60){
+  const cols = ["#ff4f8b","#ff9f1c","#ffd23f","#2ec4b6","#3a86ff","#8338ec","#7bd84a"];
+  for (let i = 0; i < n; i++) {
+    parts.push({x:innerWidth/2, y:innerHeight/2.4, vx:(Math.random()-.5)*16, vy:Math.random()*-14-4, s:Math.random()*8+5, c:cols[i%cols.length], r:Math.random()*6, life:90});
+  }
+  if (parts.length === n) { requestAnimationFrame(tick); }
+}
+function tick(){
+  ctx.clearRect(0,0,fx.width,fx.height);
+  parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .45; p.r += .2; p.life--; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6); ctx.restore(); });
+  parts = parts.filter(p => p.life > 0);
+  if (parts.length) { requestAnimationFrame(tick); } else { ctx.clearRect(0,0,fx.width,fx.height); }
+}
+let audio;
+function beep(ok){
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === "suspended") { audio.resume(); }
+    const notes = ok ? [660, 880] : [220, 160];
+    notes.forEach((f, i) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = ok ? "triangle" : "sawtooth"; o.frequency.value = f;
+      g.gain.setValueAtTime(.12, audio.currentTime + i*.09);
+      g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + i*.09 + .18);
+      o.connect(g).connect(audio.destination); o.start(audio.currentTime + i*.09); o.stop(audio.currentTime + i*.09 + .2);
+    });
+  } catch (e) { console.warn("Sound is not available", e); }
+}
+function toast(t){ const el = document.getElementById("toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1400); }
+const PRAISE = ["Супер! 🎉","Так тримати! 💪","Чудово! 🌟","Влучно! 🎯","Геніально! 🧠","Вогонь! 🔥"];
+const praise = () => PRAISE[Math.floor(Math.random() * PRAISE.length)];
+
+// ---------- round summary ----------
+function summary(right, total, mistakes, again){
+  const pct = total ? right / total : 0;
+  const stars = pct >= .95 ? "⭐⭐⭐" : pct >= .75 ? "⭐⭐☆" : pct >= .5 ? "⭐☆☆" : "☆☆☆";
+  if (pct >= .75) { confetti(120); }
+  const uniq = [...new Map(mistakes.map(w => [w.key, w])).values()];
+  stage.innerHTML = `<div class="center summary">
+    <div class="stars">${stars}</div>
+    <h2>${right} з ${total}</h2>
+    <div class="muted">${pct >= .95 ? "Ідеально! Ти — майстер!" : pct >= .75 ? "Дуже добре! Ще трохи — і ідеально." : "Нічого страшного. Повтори слова нижче — і ще раз!"}</div>
+    ${uniq.length ? `<h3 style="margin-top:22px">Запам'ятай 👇</h3><div class="mist">${uniq.map(w => `<span>${answerHtml(w)}</span>`).join("")}</div>` : ""}
+    <div class="row"><button class="btn p" id="again">🔁 Ще раунд</button>${uniq.length ? `<button class="btn v" id="weakGo">😬 Тренувати слабкі</button>` : ""}</div>
+  </div>`;
+  // The finished mode's Enter handler would re-run its last step and replace this summary.
+  keyHandler = null;
+  document.getElementById("again").onclick = () => again();
+  const wg = document.getElementById("weakGo");
+  if (wg) { wg.onclick = () => { curSet = "weak"; renderSetbar(); again(); }; }
+  renderSetbar();
+}
+
+// ---------- flashcards ----------
+function learn(fixed){
+  const round = fixed || pickRound(12); let i = 0, right = 0; const miss = [];
+  function show(){
+    if (i >= round.length) { return endRound(right, round.length, miss, learn); }
+    const w = round[i];
+    const front = `<div class="big-word" ${nAttr(w.word)}>${esc(w.word)}</div>${STRESS ? noteHtml(w) : sayBtn(w.word)}`;
+    const back = STRESS
+      ? `<div class="big-word" ${nAttr(w.word)}>${stressHtml(w)}</div>${noteHtml(w)}${hintHtml(w)}${groupTag(w)}`
+      : `<div class="muted">${esc(w.word)} ${sayBtn(w.word)}</div><div class="big-word" ${nAttr(w.back)}>${esc(w.back)}</div>${noteHtml(w)}${hintHtml(w)}${groupTag(w)}`;
+    stage.innerHTML = `<div class="counter">${i+1} / ${round.length}</div>
+      <div class="center muted small">${STRESS ? "Прочитай слово вголос. Де наголос? Потім натисни на картку." : "Що це означає? Скажи вголос, потім натисни на картку."}</div>
+      <div class="flash" id="card"><div class="flash-inner">
+        <div class="face front">${front}<div class="muted">👆 натисни, щоб перевернути</div></div>
+        <div class="face back">${back}</div>
+      </div></div>
+      <div class="row" id="grade" style="visibility:hidden">
+        <button class="btn r" id="no">❌ ${gx("Не знав", "Не знала")} <span class="kbd">1</span></button>
+        <button class="btn g" id="yes">✅ ${gx("Знав", "Знала")} <span class="kbd">2</span></button>
+      </div>
+      <div class="center muted small keys" style="margin-top:12px">Клавіші: <span class="kbd">Пробіл</span> перевернути</div>`;
+    const card = document.getElementById("card"), grade = document.getElementById("grade");
+    const flip = () => { card.classList.toggle("flipped"); grade.style.visibility = "visible"; };
+    card.onclick = flip;
+    const go = ok => { setBox(w, ok, "learn"); if (ok) { right++; addXp(2); } else { miss.push(w); round.push(w); } i++; show(); };
+    document.getElementById("no").onclick = () => go(false);
+    document.getElementById("yes").onclick = () => go(true);
+    keyHandler = e => {
+      if (e.code === "Space") { e.preventDefault(); flip(); }
+      if (grade.style.visibility === "visible" && e.key === "1") { go(false); }
+      if (grade.style.visibility === "visible" && e.key === "2") { go(true); }
+    };
+  }
+  show();
+}
+
+// ---------- stress: tap the stressed vowel ----------
+function tileFont(w){
+  const units = [...w.word].reduce((s, ch) => s + (VOW.includes(ch) ? 1.3 : .66), 0);
+  const avail = stage.clientWidth - 40 - (w.word.length - 1) * 4;
+  return Math.max(18, Math.min(44, Math.floor(avail / units)));
+}
+function clickGame(fixed){
+  const round = fixed || pickRound(15); let i = 0, right = 0, combo = 0; const miss = [];
+  function show(){
+    if (i >= round.length) { return endRound(right, round.length, miss, clickGame); }
+    const w = round[i]; let done = false, cur = w;
+    const tiles = [...w.word].map((ch, k) => ch === " " || ch === "-" ? `<div class="tile sp">${ch === "-" ? "-" : ""}</div>` : `<div class="tile ${VOW.includes(ch) ? "vow" : ""}" data-k="${k}">${esc(ch)}</div>`).join("");
+    stage.innerHTML = `<div class="counter">${i+1} / ${round.length}</div><div class="combo">${combo >= 2 ? "🔥 x" + combo : ""}</div>
+      <div class="center"><div class="muted">Натисни на голосну, на яку падає наголос</div>${noteHtml(w)}
+      <div class="tiles" style="--fs:${tileFont(w)}px">${tiles}</div><div id="fb" style="min-height:120px"></div></div>`;
+    const next = () => { cur = null; i++; show(); };
+    stage.querySelectorAll(".tile.vow").forEach(t => t.onclick = () => {
+      if (done) { return; }
+      done = true;
+      const k = +t.dataset.k, ok = w.stress.includes(k);
+      if (ok) {
+        t.classList.add("ok"); right++; combo++; addXp(3 + Math.min(combo, 5)); beep(true);
+        if (combo % 5 === 0) { confetti(); toast(`${combo} поспіль! 🔥`); } else { toast(praise()); }
+      } else {
+        t.classList.add("bad"); combo = 0; miss.push(w); beep(false);
+        w.stress.forEach(s => stage.querySelector(`.tile[data-k="${s}"]`).classList.add("show"));
+      }
+      setBox(w, ok, "click");
+      document.getElementById("fb").innerHTML = `<div class="big-word mid" ${nAttr(w.word)}>${stressHtml(w)}</div>${hintHtml(w)}
+        <div class="row"><button class="btn ${ok ? "g" : "o"}" id="next">Далі ➜ <span class="kbd">Enter</span></button></div>`;
+      document.getElementById("next").onclick = next;
+      if (ok && !w.hint) { setTimeout(() => { if (cur === w) { next(); } }, 900); }
+    });
+    keyHandler = e => { if (done && (e.key === "Enter" || e.code === "Space")) { e.preventDefault(); next(); } };
+  }
+  show();
+}
+
+// ---------- choose the right variant ----------
+function chooseOptions(w){
+  if (STRESS) {
+    const wrong = shuffle(wrongIdx(w)).slice(0, 2).map(k => ({html:fakeHtml(w, k), ok:false}));
+    return {q:"Як правильно?", qWord:"", opts:shuffle([{html:stressHtml(w), ok:true}, ...wrong])};
+  }
+  const reverse = G.reverse !== false && Math.random() < .5;
+  const ds = distractors(w, 3);
+  const label = x => reverse ? x.word : x.back;
+  return {
+    q: reverse ? "Як це буде?" : "Що це означає?",
+    qWord: `<div class="big-word mid" ${nAttr(reverse ? w.back : w.word)}>${esc(reverse ? w.back : w.word)}</div>${reverse ? "" : sayBtn(w.word)}`,
+    opts: shuffle([{html:fitHtml(label(w)), text:label(w), ok:true}, ...ds.map(x => ({html:fitHtml(label(x)), text:label(x), ok:false}))])
+  };
+}
+function choose(fixed){
+  const round = fixed || pickRound(15); let i = 0, right = 0; const miss = [];
+  function show(){
+    if (i >= round.length) { return endRound(right, round.length, miss, choose); }
+    const w = round[i]; let done = false;
+    const c = chooseOptions(w);
+    stage.innerHTML = `<div class="counter">${i+1} / ${round.length}</div>
+      <div class="center"><div class="muted">${c.q}</div>${c.qWord}${noteHtml(w)}
+      <div class="opts">${c.opts.map((o, k) => `<button class="opt" data-k="${k}" ${nAttr(STRESS ? w.word : o.text)}><span class="k">${k+1}</span>${o.html}</button>`).join("")}</div>
+      <div id="fb" style="min-height:90px"></div></div>`;
+    const pick = k => {
+      if (done) { return; }
+      done = true;
+      const btns = stage.querySelectorAll(".opt"), ok = c.opts[k].ok;
+      btns[k].classList.add(ok ? "ok" : "bad");
+      c.opts.forEach((o, j) => { if (o.ok) { btns[j].classList.add("ok"); } });
+      setBox(w, ok, "choose"); beep(ok);
+      if (ok) { right++; addXp(3); } else { miss.push(w); }
+      document.getElementById("fb").innerHTML = `${hintHtml(w)}<div class="row"><button class="btn b" id="next">Далі ➜ <span class="kbd">Enter</span></button></div>`;
+      document.getElementById("next").onclick = () => { i++; show(); };
+    };
+    stage.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(+b.dataset.k));
+    keyHandler = e => {
+      const n = parseInt(e.key, 10);
+      if (!done && n >= 1 && n <= c.opts.length) { pick(n - 1); }
+      if (done && e.key === "Enter") { i++; show(); }
+    };
+  }
+  show();
+}
+
+// ---------- pairs: type the answer ----------
+const norm = t => t.toLowerCase().replace(/[’ʼ`]/g, "'").replace(/\s+/g, " ").trim();
+const ART = /^(a|an|the)\s+/i;
+function typeGame(fixed){
+  const round = fixed || pickRound(12); let i = 0, right = 0; const miss = [];
+  function show(){
+    if (i >= round.length) { return endRound(right, round.length, miss, typeGame); }
+    const w = round[i]; let done = false, hints = 0;
+    const answers = w.word.split("/").map(norm);
+    stage.innerHTML = `<div class="counter">${i+1} / ${round.length}</div>
+      <div class="center"><div class="muted">Напиши ${G.frontName ? esc(G.frontName) : "слово"}:</div>
+      <div class="big-word mid" ${nAttr(w.back)}>${esc(w.back)}</div>${noteHtml(w)}
+      <input id="ans" class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="${"_ ".repeat(Math.min(w.word.length, 14)).trim()}">
+      <div class="row"><button class="btn o" id="hintBtn">💡 Буква</button><button class="btn g" id="check">Перевірити</button></div>
+      <div id="fb" style="min-height:90px"></div></div>`;
+    const inp = document.getElementById("ans");
+    setTimeout(() => inp.focus(), 50);
+    document.getElementById("hintBtn").onclick = () => { hints++; inp.value = w.word.split("/")[0].trim().slice(0, hints); inp.focus(); };
+    const check = () => {
+      if (done) { i++; show(); return; }
+      done = true;
+      const said = norm(inp.value);
+      const noArt = !answers.includes(said) && !ART.test(said) ? w.word.split("/").map(a => a.trim()).find(a => ART.test(a) && norm(a.replace(ART, "")) === said) : null;
+      const ok = (answers.includes(said) || !!noArt) && hints === 0;
+      const target = noArt || w.word.split("/")[0].trim();
+      const diff = [...target].map((ch, k) => said[k] === ch.toLowerCase() ? esc(ch) : `<b class="miss">${esc(ch)}</b>`).join("")
+        + (said.length > target.length ? `<s class="miss">${esc(said.slice(target.length))}</s>` : "");
+      const hintNote = hints > 0 && (answers.includes(said) || noArt) ? `<div class="note">💡 Правильно, але з підказкою — не зараховано. Слово прийде ще раз.</div>` : "";
+      inp.classList.add(ok ? "ok" : "bad"); inp.readOnly = true;
+      setBox(w, ok, "type"); beep(ok);
+      if (ok) { right++; addXp(5); toast(praise()); } else { miss.push(w); }
+      document.getElementById("hintBtn").remove();
+      document.getElementById("check").textContent = "Далі ➜";
+      document.getElementById("fb").innerHTML = noArt
+        ? `<div class="big-word mid" ${nAttr(target)}><b class="art">${esc(target.match(ART)[0].trim())}</b> ${esc(target.replace(ART, ""))}</div><div class="note">⚠️ Не забудь артикль <b class="art">${esc(target.match(ART)[0].trim())}</b></div>${hintNote}${sayBtn(target)}${hintHtml(w)}`
+        : `<div class="big-word mid" ${nAttr(target)}>${ok ? esc(w.word) : diff}</div>${hintNote}${sayBtn(target)}${hintHtml(w)}`;
+    };
+    document.getElementById("check").onclick = check;
+    keyHandler = e => { if (e.key === "Enter") { e.preventDefault(); check(); } };
+  }
+  show();
+}
+
+// ---------- pairs: match the pairs ----------
+function matchGame(){
+  const boards = 3, per = 5; let b = 0, right = 0, total = 0; const miss = [];
+  function board(){
+    if (b >= boards) { return summary(right, total, miss, matchGame); }
+    const items = pickRound(per); total += items.length;
+    const missed = new Set();
+    const left = shuffle(items.slice());
+    let rightCol = shuffle(items.slice());
+    for (let t = 0; t < 20 && rightCol.filter((w, k) => w === left[k]).length > 1; t++) { rightCol = shuffle(rightCol); }
+    stage.innerHTML = `<div class="counter">${b+1} / ${boards}</div>
+      <div class="center muted">Знайди пари: натисни слово зліва, потім його значення справа</div>
+      <div class="match"><div>${left.map(w => `<button class="mt L" data-id="${w.id}" ${nAttr(w.word)}>${fitHtml(w.word)}</button>`).join("")}</div>
+      <div>${rightCol.map(w => `<button class="mt R" data-id="${w.id}" ${nAttr(w.back)}>${fitHtml(w.back)}</button>`).join("")}</div></div>`;
+    let sel = null, left2 = items.length;
+    stage.querySelectorAll(".mt").forEach(btn => btn.onclick = () => {
+      if (btn.classList.contains("done")) { return; }
+      if (btn.classList.contains("L")) {
+        stage.querySelectorAll(".mt.L").forEach(x => x.classList.remove("sel"));
+        btn.classList.add("sel"); sel = btn;
+        if (G.speak) { speak(ITEMS[+btn.dataset.id].word); }
+        return;
+      }
+      if (!sel) { return; }
+      const w = ITEMS[+sel.dataset.id], ok = sel.dataset.id === btn.dataset.id;
+      beep(ok);
+      if (ok) {
+        sel.classList.add("done"); btn.classList.add("done"); sel.classList.remove("sel");
+        if (!missed.has(w.id)) { right++; setBox(w, true, "match"); addXp(3); }
+        sel = null; left2--;
+        if (left2 === 0) { confetti(40); setTimeout(() => { b++; board(); }, 700); }
+      } else {
+        [sel, btn].forEach(x => { x.classList.remove("bad"); void x.offsetWidth; x.classList.add("bad"); });
+        if (!missed.has(w.id)) { missed.add(w.id); miss.push(w); setBox(w, false, "match"); }
+      }
+    });
+    keyHandler = null;
+  }
+  board();
+}
+
+// ---------- blitz ----------
+let blitzTimer;
+function blitzIntro(){
+  stage.innerHTML = `<div class="center">
+    <div style="font-size:70px">⚡</div><h2 style="font-size:34px;margin:0">Бліц: 60 секунд</h2>
+    <p class="muted" style="font-size:18px">${STRESS ? "Слово з'являється з наголосом." : "З'являється слово і переклад."} Швидко скажи: правильно чи ні?<br>
+    <span class="keys">Клавіші: <span class="kbd">←</span> ні, <span class="kbd">→</span> так. </span>Серія правильних відповідей дає більше очок!</p>
+    <p style="font-size:20px">Твій рекорд: <b>${S.best}</b></p>
+    <div class="row"><button class="btn o" id="go">🚀 Старт!</button></div></div>`;
+  document.getElementById("go").onclick = blitz;
+  keyHandler = e => { if (e.key === "Enter" || e.code === "Space") { e.preventDefault(); blitz(); } };
+}
+function blitz(){
+  let score = 0, combo = 0, left = 60, right = 0, total = 0, busy = false; const miss = [];
+  let cur, isRight;
+  stage.innerHTML = `<div class="counter">Очки: <span id="sc">0</span></div><div class="combo" id="cb"></div>
+    <div class="timer"><div id="tb" style="width:100%"></div></div>
+    <div class="center"><div class="blitz-word" id="bw"></div><div id="bn" class="note"></div>
+    <div class="row"><button class="btn r big" id="bno">❌ Ні <span class="kbd">←</span></button>
+    <button class="btn g big" id="byes">✅ Так <span class="kbd">→</span></button></div></div>`;
+  const bw = document.getElementById("bw"), bn = document.getElementById("bn");
+  function showCorrect(){
+    if (STRESS) { bw.innerHTML = stressHtml(cur); } else { bn.innerHTML = `<b class="okc">= ${esc(cur.back)}</b>`; }
+  }
+  function nextWord(){
+    cur = pickRound(1, cur)[0];
+    if (STRESS) {
+      const wr = wrongIdx(cur);
+      isRight = !wr.length || Math.random() < .5;
+      bw.style.setProperty("--n", cur.word.length);
+      bw.innerHTML = isRight ? stressHtml(cur) : fakeHtml(cur, wr[Math.floor(Math.random() * wr.length)]);
+      bn.textContent = cur.note ? `(${cur.note})` : "";
+    } else {
+      const d = distractors(cur, 1)[0];
+      isRight = !d || Math.random() < .5;
+      bw.style.setProperty("--n", Math.min(cur.word.length, 12));
+      bw.textContent = cur.word;
+      bn.innerHTML = `= ${esc(isRight ? cur.back : d.back)}`;
+    }
+  }
+  function answer(said){
+    if (busy || left <= 0) { return; }
+    total++;
+    const ok = said === isRight;
+    stage.classList.remove("flashbg-ok","flashbg-bad"); void stage.offsetWidth;
+    stage.classList.add(ok ? "flashbg-ok" : "flashbg-bad");
+    beep(ok);
+    if (ok) { right++; combo++; score += 1 + Math.floor(combo / 5); setBox(cur, true, "blitz"); nextWord(); }
+    else {
+      combo = 0; miss.push(cur); setBox(cur, false, "blitz"); busy = true;
+      showCorrect();
+      setTimeout(() => { busy = false; nextWord(); }, 1200);
+    }
+    document.getElementById("sc").textContent = score;
+    document.getElementById("cb").textContent = combo >= 3 ? `🔥 x${combo}` : "";
+  }
+  document.getElementById("bno").onclick = () => answer(false);
+  document.getElementById("byes").onclick = () => answer(true);
+  keyHandler = e => { if (e.key === "ArrowLeft") { answer(false); } if (e.key === "ArrowRight") { answer(true); } };
+  nextWord();
+  clearInterval(blitzTimer);
+  blitzTimer = setInterval(() => {
+    left -= .2;
+    const tb = document.getElementById("tb");
+    if (!tb) { clearInterval(blitzTimer); return; }
+    tb.style.width = Math.max(0, left / 60 * 100) + "%";
+    if (left <= 0) {
+      clearInterval(blitzTimer);
+      addXp(score);
+      if (score > S.best) { S.best = score; save(); renderStats(); toast("🏆 Новий рекорд!"); }
+      summary(right, total, miss, blitzIntro);
+      stage.querySelector("h2").textContent = `${score} очок · ${right} з ${total}`;
+    }
+  }, 200);
+}
+
+// ---------- Доучи: everything that keeps a word from "learned" ----------
+const MODE_NAME = {learn:"📚 Картки", click:"👆 Тицьни", choose:"🎯 Вибери", type:"⌨️ Напиши"};
+const MODE_FN = {learn: r => learn(r), click: r => clickGame(r), choose: r => choose(r), type: r => typeGame(r)};
+let mix = null;
+function endRound(right, total, miss, again){
+  if (!mix) { summary(right, total, miss, again); return; }
+  mix.right += right; mix.miss.push(...miss); mix.k++;
+  if (mix.k < mix.queue.length) { mixRun(); return; }
+  const done = mix; mix = null;
+  summary(done.right, done.queue.length, done.miss, fixIntro);
+}
+const PROOF_TXT = STRESS ? gx("ще не тицьнув правильно", "ще не тицьнула правильно") : gx("ще не написав правильно", "ще не написала правильно");
+function fixList(){
+  const fails = shuffle(Object.entries(S.fail).flatMap(([key, f]) => {
+    const w = ITEMS.find(x => x.key === key);
+    return w ? Object.keys(f).filter(m => MODE_FN[m]).map(m => ({w, m})) : [];
+  }));
+  const queued = new Set(fails.filter(x => x.m === PROOF_MODE).map(x => x.w.key));
+  const unproved = shuffle(ITEMS.filter(w => rawBox(w) > 0 && !S.proved[w.key] && !queued.has(w.key)))
+    .sort((a, b) => rawBox(b) - rawBox(a)).map(w => ({w, m: PROOF_MODE}));
+  const taken = new Set([...fails, ...unproved].map(x => x.w.key));
+  const modes = STRESS ? ["click", "choose"] : ["choose", "type"];
+  const almost = shuffle(ITEMS.filter(w => box(w) < 5 && !taken.has(w.key)))
+    .sort((a, b) => box(b) - box(a)).map(w => ({w, m: modes[Math.floor(Math.random() * modes.length)]}));
+  return {fails, unproved, almost};
+}
+function chipList(list, label){
+  const max = 30, more = list.length - max;
+  return `<div class="mist">${list.slice(0, max).map(x => `<span>${label(x)}</span>`).join("")}${more > 0 ? `<span>+ ще ${more}</span>` : ""}</div>`;
+}
+function mixRun(){
+  const x = mix.queue[mix.k];
+  MODE_FN[x.m]([x.w]);
+  const c = stage.querySelector(".counter");
+  if (c) { c.textContent = `🏁 ${mix.k + 1} / ${mix.queue.length} · ${MODE_NAME[x.m]}`; }
+}
+function fixIntro(){
+  mix = null; keyHandler = null;
+  const {fails, unproved, almost} = fixList();
+  const all = [...fails, ...unproved, ...almost];
+  if (!all.length) {
+    stage.innerHTML = `<div class="center"><div style="font-size:70px">🏆</div><h2>Усі слова — знаю напам'ять!</h2>
+      <p class="muted" style="font-size:18px">Тут з'являться помилки і слова, які ще не стали «знаю напам'ять».</p>
+      <div class="row"><button class="btn p" id="party">🎉 Святкувати ще раз</button></div></div>`;
+    document.getElementById("party").onclick = celebrate;
+    return;
+  }
+  const n = Math.min(all.length, 15);
+  stage.innerHTML = `<div class="tip">🏁 Тут усе, що не пускає слова в «знаю напам'ять». Спершу помилки, потім слова, яким лишилося найменше. Слово стає вивченим, тільки коли ти хоч раз ${STRESS ? gx("тицьнув", "тицьнула") + " його правильно в Тицьни" : gx("написав", "написала") + " його правильно без підказки"} і в нього немає помилок. Помилки з Пар і Бліцу йдуть у ${STRESS ? "Картки" : "Напиши"}.</div>
+    ${fails.length ? `<h3>🩹 Помилки (${fails.length})</h3>${chipList(fails, x => `${answerHtml(x.w)} · ${MODE_NAME[x.m]}`)}` : ""}
+    ${unproved.length ? `<h3>✍️ ${PROOF_TXT[0].toUpperCase() + PROOF_TXT.slice(1)} (${unproved.length})</h3>${chipList(unproved, x => answerHtml(x.w))}` : ""}
+    ${almost.length ? `<h3>⭐ Ще не напам'ять (${almost.length})</h3>${chipList(almost, x => answerHtml(x.w))}` : ""}
+    <div class="row"><button class="btn p" id="go">🏁 Доучити (${n}) <span class="kbd">Enter</span></button></div>`;
+  const start = () => { mix = {queue:shuffle(all.slice(0, n)), k:0, right:0, miss:[]}; mixRun(); };
+  document.getElementById("go").onclick = start;
+  keyHandler = e => { if (e.key === "Enter") { e.preventDefault(); start(); } };
+}
+
+// ---------- groups ----------
+function rules(){
+  const tip = STRESS
+    ? "🧠 <b>Як вчити найшвидше:</b> бери одну групу. Прочитай правило і слова вголос, плескаючи в долоні на наголошений склад 👏. Потім натисни «Грати групу». Схожі слова легше запам'ятати разом."
+    : "🧠 <b>Як вчити найшвидше:</b> бери одну групу. Прочитай слова вголос і придумай з кожним коротке речення про себе. Потім натисни «Грати групу».";
+  let h = `<div class="tip">${tip}</div><div class="rules">`;
+  Object.entries(GROUPS).forEach(([id, g]) => {
+    const ws = ITEMS.filter(w => w.group === id);
+    h += `<div class="rule" style="--c:${g.c}"><h3>${esc(g.name)}</h3>${g.rule ? `<p>${esc(g.rule)}</p>` : ""}
+      <div class="ws">${ws.map(w => `<span>${answerHtml(w)}</span>`).join("")}</div>
+      <button class="btn" data-g="${id}">▶ Грати групу (${ws.length})</button></div>`;
+  });
+  stage.innerHTML = h + "</div>";
+  stage.querySelectorAll("[data-g]").forEach(b => b.onclick = () => { curSet = "g:" + b.dataset.g; renderSetbar(); openTab(STRESS ? "click" : "choose"); });
+  keyHandler = null;
+}
+
+// ---------- progress ----------
+function progress(){
+  const names = [gx("ще не бачив", "ще не бачила"),"важке","трохи знаю","майже","знаю","знаю напам'ять"];
+  stage.innerHTML = `<div class="tip">Кожне слово має колір. Правильна відповідь робить його зеленішим. Помилка повертає його назад. Мета — щоб усі слова стали бірюзовими 💚. 🔒 — слово майже вивчене, його треба пройти у вкладці «Доучи». Натисни на слово, щоб побачити підказку.</div>
+    <div class="legend">${names.map((n, k) => `<span><i class="lv${k}"></i>${n} (${ITEMS.filter(w => box(w) === k).length})</span>`).join("")}</div>
+    <div class="grid">${ITEMS.map(w => `<button class="wchip lv${box(w)}" data-id="${w.id}">${STRESS ? stressHtml(w) : esc(w.word)}${rawBox(w) >= 4 && blocked(w) ? " 🔒" : ""}</button>`).join("")}</div>
+    <div id="detail" class="center" style="min-height:140px;margin-top:20px"></div>
+    <div class="row"><button class="btn r" id="reset">🗑️ Стерти весь прогрес</button></div>`;
+  stage.querySelectorAll(".wchip").forEach(b => b.onclick = () => {
+    const w = ITEMS[+b.dataset.id];
+    document.getElementById("detail").innerHTML = STRESS
+      ? `<div class="big-word mid" ${nAttr(w.word)}>${stressHtml(w)}</div>${noteHtml(w)}${hintHtml(w)}<br>${groupTag(w)}`
+      : `<div class="big-word mid" ${nAttr(w.word)}>${esc(w.word)}</div>${sayBtn(w.word)}<div class="note">${esc(w.back)}</div>${noteHtml(w)}${hintHtml(w)}<br>${groupTag(w)}`;
+  });
+  document.getElementById("reset").onclick = () => {
+    if (confirm("Стерти весь прогрес? Усі слова, XP і рекорд почнуться з нуля.")) { S = {box:{}, xp:0, best:0, days:0, last:"", miss:{}, fail:{}, proved:{}, champion:0}; save(); renderStats(); touchDay(); progress(); renderSetbar(); }
+  };
+  keyHandler = null;
+}
+
+// ---------- navigation ----------
+const TAB_DEFS = (STRESS
+  ? [["learn","📚","Картки",learn,"#8338ec"],["click","👆","Тицьни",clickGame,"#ff4f8b"],["choose","🎯","Вибери",choose,"#3a86ff"],["blitz","⚡","Бліц",blitzIntro,"#ff9f1c"],["fix","🏁","Доучи",fixIntro,"#e63946"]]
+  : [["learn","📚","Картки",learn,"#8338ec"],["choose","🎯","Вибери",choose,"#3a86ff"],["type","⌨️","Напиши",typeGame,"#ff4f8b"],["match","🧩","Пари",matchGame,"#2ec4b6"],["blitz","⚡","Бліц",blitzIntro,"#ff9f1c"],["fix","🏁","Доучи",fixIntro,"#e63946"]])
+  .concat(HAS_GROUPS ? [["rules","🗂️","Групи",rules,"#06a0c8"]] : [])
+  .concat([["progress","📈","Прогрес",progress,"#7bd84a"]]);
+const TABS = Object.fromEntries(TAB_DEFS.map(t => [t[0], t[3]]));
+let tab = "learn", keyHandler = null;
+const nav = document.querySelector("nav");
+nav.innerHTML = TAB_DEFS.map(t => `<button data-tab="${t[0]}" style="--on:${t[4]}"><span class="ic">${t[1]}</span><span>${t[2]}</span></button>`).join("");
+function openTab(t){
+  tab = t; clearInterval(blitzTimer); keyHandler = null; mix = null;
+  stage.classList.remove("flashbg-ok","flashbg-bad");
+  nav.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
+  setbar.style.visibility = (t === "rules" || t === "progress" || t === "fix") ? "hidden" : "visible";
+  TABS[t]();
+}
+nav.querySelectorAll("button").forEach(b => b.onclick = () => openTab(b.dataset.tab));
+addEventListener("keydown", e => { if (keyHandler) { keyHandler(e); } });
+
+const stage = document.getElementById("stage"), setbar = document.getElementById("setbar");
+const xp = document.getElementById("xp"), best = document.getElementById("best"), days = document.getElementById("days");
+const prog = document.getElementById("prog"), progLabel = document.getElementById("progLabel");
+document.getElementById("title").innerHTML = (G.titleHtml || esc(G.title)) + " " + (G.emoji || "🎯");
+if (window.GAME_HOME) { document.getElementById("title").insertAdjacentHTML("beforebegin", `<a class="home" href="${esc(window.GAME_HOME)}" title="Усі набори">🏠</a>`); }
+touchDay(); renderStats(); renderSetbar(); openTab("learn");
+</script>
+</body>
+</html>
