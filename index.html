@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ігри">
+<meta name="theme-color" content="#fff8ef">
+<title>Ігри для запам'ятовування</title>
+<style>
+:root{
+  --bg:#fff8ef; --card:#ffffff; --ink:#2b2350; --muted:#7a7399;
+  --pink:#ff4f8b; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2ec4b6; --lime:#7bd84a; --violet:#8338ec;
+  --shadow:0 6px 0 rgba(43,35,80,.12), 0 12px 28px rgba(43,35,80,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);
+  background:radial-gradient(circle at 10% 0%,#ffe3f1 0,transparent 40%),radial-gradient(circle at 90% 10%,#dff3ff 0,transparent 40%),radial-gradient(circle at 50% 100%,#e6ffe9 0,transparent 45%),var(--bg);
+  min-height:100vh}
+main{max-width:900px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+h1{margin:0 0 4px;font-size:28px}
+.sub{color:var(--muted);margin:0 0 20px}
+.sets{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.set{display:flex;flex-direction:column;gap:10px;background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:18px;color:inherit;text-decoration:none;transition:transform .1s}
+.set:active{transform:scale(.98)}
+.top{display:flex;align-items:center;gap:12px}
+.emo{font-size:38px;line-height:1}
+.name{font-size:20px;font-weight:800}
+.meta{color:var(--muted);font-size:14px}
+.progress{height:12px;background:#eee6f5;border-radius:999px;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--pink),var(--orange),var(--yellow),var(--lime),var(--green))}
+.done{color:var(--green);font-weight:800}
+.empty{color:var(--muted)}
+@media (hover:hover){ .set:hover{transform:translateY(-3px)} }
+@media (max-width:700px){ h1{font-size:22px} .sets{gap:12px} }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ігри для запам'ятовування 🧠</h1>
+  <p class="sub">Обери набір — прогрес зберігається.</p>
+  <div class="sets" id="sets"></div>
+</main>
+<script>
+// PNG on canvas: the iOS home screen ignores SVG icons and paints transparent corners black.
+[["icon", 64, 22], ["apple-touch-icon", 180, 0]].forEach(([rel, px, r]) => {
+  const c = document.createElement("canvas"); c.width = c.height = px;
+  const x = c.getContext("2d"); x.scale(px / 100, px / 100);
+  const bg = x.createLinearGradient(0, 0, 100, 100);
+  ["#ff4f8b", "#ff9f1c", "#ffd23f", "#2ec4b6"].forEach((col, k) => bg.addColorStop(k / 3, col));
+  x.fillStyle = bg; x.beginPath(); x.roundRect(0, 0, 100, 100, r); x.fill();
+  x.font = "60px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif";
+  x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("🧠", 50, 54);
+  const l = document.createElement("link"); l.rel = rel; l.href = c.toDataURL("image/png"); document.head.appendChild(l);
+});
+
+function esc(t){ return String(t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+// Same "learned" rule as the engine: box >= 4, proved, no open mistakes.
+function learned(set){
+  const S = JSON.parse(localStorage.getItem(set.slug + "_v1") || "null");
+  if (!S) { return null; }
+  const n = Object.keys(S.box || {}).filter(k => S.box[k] >= 4 && (S.proved || {})[k] && !(S.fail || {})[k]).length;
+  return Math.min(n, set.count);
+}
+
+function card(set){
+  const n = learned(set), pct = n === null ? 0 : Math.round(100 * n / set.count);
+  const status = n === null ? `<span class="empty">ще не почато</span>`
+    : n === set.count ? `<span class="done">🏆 усе вивчено!</span>`
+    : `${n} з ${set.count} вивчено`;
+  return `<a class="set" href="./${esc(set.slug)}/">
+    <div class="top"><div class="emo">${esc(set.emoji)}</div>
+      <div><div class="name">${esc(set.title)}</div><div class="meta">${set.count} слів</div></div></div>
+    <div class="progress"><div style="width:${pct}%"></div></div>
+    <div class="meta">${status}</div></a>`;
+}
+
+const box = document.getElementById("sets");
+fetch("sets.json", {cache: "no-cache"}).then(r => r.json())
+  .then(sets => { box.innerHTML = sets.map(card).join(""); })
+  .catch(e => { box.innerHTML = `<p class="empty">Не вдалося завантажити набори: ${esc(e.message)}</p>`; });
+// bfcache keeps the old numbers when you come back from a game.
+addEventListener("pageshow", e => { if (e.persisted) { location.reload(); } });
+</script>
+</body>
+</html>
