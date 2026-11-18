@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Трикутники">
+<meta name="theme-color" content="#fff8ef">
+<title>Трикутники: теорія і формули</title>
+<style>
+:root{
+  --bg:#fff8ef; --card:#fff; --ink:#2b2350; --muted:#7a7399;
+  --pink:#ff4f8b; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2ec4b6; --lime:#7bd84a;
+  --blue:#3a86ff; --violet:#8338ec; --red:#ef476f;
+  --shadow:0 6px 0 rgba(43,35,80,.12), 0 12px 28px rgba(43,35,80,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);line-height:1.45;
+  background:radial-gradient(circle at 10% 0%,#ffe3f1 0,transparent 40%),radial-gradient(circle at 90% 10%,#dff3ff 0,transparent 40%),var(--bg);
+  -webkit-tap-highlight-color:transparent}
+header{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 16px 6px;max-width:1040px;margin:0 auto}
+h1{margin:0;font-size:22px}
+h1 .acc{color:var(--pink)}
+.home{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);text-decoration:none;font-size:22px;flex:none}
+.btn{display:inline-block;border:0;border-radius:16px;padding:12px 16px;font-size:16px;font-weight:800;cursor:pointer;background:var(--ink);color:#fff;box-shadow:var(--shadow);text-decoration:none;text-align:center}
+.btn.go{background:var(--green)}
+.btn.pink{background:var(--pink)}
+.btn.light{background:#fff;color:var(--ink)}
+header .btn{margin-left:auto;flex:none}
+nav{position:sticky;top:0;z-index:5;background:rgba(255,248,239,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+nav .in{display:flex;gap:8px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:10px 16px;scrollbar-width:none}
+nav .in::-webkit-scrollbar{display:none}
+nav a{flex:none;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;background:#fff;border:2px solid var(--c,#e2dcf5);border-radius:999px;padding:6px 12px;white-space:nowrap}
+main{max-width:1040px;margin:0 auto;padding:6px 16px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:16px}
+.hero{margin:8px 0 18px}
+.hero ol{margin:6px 0 10px;padding-left:22px}
+.hero .row{display:flex;gap:10px;flex-wrap:wrap}
+.hero .row .btn{flex:1;min-width:150px}
+/* group */
+section.grp{margin:26px 0}
+.band{background:var(--c);color:#fff;border-radius:22px;padding:14px 18px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}
+.band .em{font-size:40px;line-height:1;background:#fff;border-radius:16px;padding:8px}
+.band h2{margin:0;font-size:22px}
+.band .k{opacity:.9;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.band p{margin:4px 0 0;font-size:15px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+@media (min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.fc{border-top:8px solid var(--c);display:flex;flex-direction:column}
+.fc h3{margin:0 0 4px;font-size:19px;display:flex;gap:8px;align-items:center}
+.fc h3 .n{background:var(--c);color:#fff;border-radius:10px;padding:2px 8px;font-size:13px}
+.formula{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:clamp(21px,6vw,30px);text-align:center;background:#f6f2ff;border:3px dashed var(--c);border-radius:18px;padding:12px 8px;margin:8px 0;line-height:1.5;cursor:pointer;position:relative}
+.formula .line{display:block}
+.fig{display:block;width:100%;max-width:260px;margin:4px auto;height:auto}
+.it{display:flex;gap:8px;margin:6px 0;font-size:15.5px}
+.it>b:first-child{flex:none;width:24px;text-align:center}
+.it.fix{background:#ffe3ea;border:2px solid var(--red);border-radius:12px;padding:8px}
+.it.mem{background:#fff4d6;border-radius:12px;padding:8px}
+details{margin:6px 0;font-size:15px;background:#f3f0fa;border-radius:12px;padding:8px 10px}
+summary{cursor:pointer;font-weight:700}
+.grp .after{margin-top:14px;text-align:center}
+/* math */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+.fr>span:last-child{padding:0 4px}
+.rt{white-space:nowrap}
+.rt>span{border-top:2px solid currentColor;padding:0 2px;margin-left:1px}
+/* self-test: hide formulas */
+body.test .formula>*{visibility:hidden}
+body.test .formula::after{content:"👆 Скажи формулу вголос і торкнись";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 16px system-ui;color:var(--muted)}
+body.test .formula.show>*{visibility:visible}
+body.test .formula.show::after{content:none}
+.toggle{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;padding:10px 14px;font-size:15px;opacity:.95}
+/* pick table */
+table{width:100%;border-collapse:collapse;font-size:15.5px}
+td{padding:9px 8px;border-bottom:1px solid #eee;vertical-align:middle}
+td:first-child{width:55%}
+td .ans{font-weight:800;color:var(--c)}
+td a{text-decoration:none}
+/* links */
+.links{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:700px){.links{grid-template-columns:1fr 1fr}}
+.lk .ab{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:800}
+.lk .ab span{background:#f1e8ff;border-radius:10px;padding:4px 10px}
+.lk .ab i{font-style:normal;font-size:20px;color:var(--pink)}
+.lk p{margin:8px 0 0;font-size:15px}
+svg text{font-family:"Segoe UI",system-ui,sans-serif;font-weight:700;font-size:15px;fill:#2b2350}
+.foot{text-align:center;margin:30px 0 70px}
+main{padding-bottom:90px}
+</style>
+</head>
+<body>
+<header>
+  <a class="home" href="../" title="Усі ігри">🏠</a>
+  <h1>📖 <span class="acc">Теорія</span> · трикутники</h1>
+  <a class="btn pink" href="./">🎮 Гра</a>
+</header>
+<nav><div class="in" id="nav"></div></nav>
+<main id="main"></main>
+<button class="btn toggle" id="toggle" onclick="toggleTest()">🙈 Перевір себе</button>
+<script>
+"use strict";
+/* ---------- math helpers ---------- */
+const fr = (n, d) => `<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const rt = x => `<span class="rt">√<span>${x}</span></span>`;
+const L = (...lines) => lines.map(l => `<span class="line">${l}</span>`).join("");
+
+/* ---------- svg helpers ---------- */
+const P = pts => pts.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
+const svg = (w, h, body) => `<svg class="fig" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
+const poly = (pts, fill = "#fff3c4", stroke = "#2b2350") => `<polygon points="${P(pts)}" fill="${fill}" stroke="${stroke}" stroke-width="3" stroke-linejoin="round"/>`;
+const ln = (a, b, col = "#2b2350", w = 3, dash = "") => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ""} stroke-linecap="round"/>`;
+const tx = (p, s, col = "#2b2350", size = 15) => `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle" style="fill:${col};font-size:${size}px">${s}</text>`;
+const cir = (c, r, col = "#8338ec", fill = "none", dash = "") => `<circle cx="${c[0]}" cy="${c[1]}" r="${r}" stroke="${col}" stroke-width="2.5" fill="${fill}" ${dash ? `stroke-dasharray="${dash}"` : ""}/>`;
+const dot = (p, col = "#2b2350") => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${col}"/>`;
+const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+function arc(v, a, b, r = 22, col = "#ff4f8b"){
+  const u = lerp(v, a, r / dist(v, a)), w = lerp(v, b, r / dist(v, b));
+  const cross = (a[0] - v[0]) * (b[1] - v[1]) - (a[1] - v[1]) * (b[0] - v[0]);
+  return `<path d="M${u[0].toFixed(1)},${u[1].toFixed(1)} A${r},${r} 0 0 ${cross > 0 ? 1 : 0} ${w[0].toFixed(1)},${w[1].toFixed(1)}" fill="none" stroke="${col}" stroke-width="3"/>`;
+}
+function square(v, a, b, s = 12){
+  const u = lerp(v, a, s / dist(v, a)), w = lerp(v, b, s / dist(v, b));
+  const c = [u[0] + w[0] - v[0], u[1] + w[1] - v[1]];
+  return `<polyline points="${P([u, c, w])}" fill="none" stroke="#2b2350" stroke-width="2"/>`;
+}
+function tick(a, b, n = 1, col = "#2b2350"){
+  const m = mid(a, b), d = dist(a, b), ux = (b[0] - a[0]) / d, uy = (b[1] - a[1]) / d;
+  let s = "";
+  for (let i = 0; i < n; i++) {
+    const off = (i - (n - 1) / 2) * 6, c = [m[0] + ux * off, m[1] + uy * off];
+    s += ln([c[0] - uy * 7, c[1] + ux * 7], [c[0] + uy * 7, c[1] - ux * 7], col, 2.5);
+  }
+  return s;
+}
+function incircle(A, B, C){
+  const a = dist(B, C), b = dist(C, A), c = dist(A, B), p = a + b + c;
+  const I = [(a * A[0] + b * B[0] + c * C[0]) / p, (a * A[1] + b * B[1] + c * C[1]) / p];
+  const s = Math.abs((B[0] - A[0]) * (C[1] - A[1]) - (C[0] - A[0]) * (B[1] - A[1])) / 2;
+  return [I, 2 * s / p];
+}
+function foot(P0, A, B){
+  const dx = B[0] - A[0], dy = B[1] - A[1], t = ((P0[0] - A[0]) * dx + (P0[1] - A[1]) * dy) / (dx * dx + dy * dy);
+  return [A[0] + t * dx, A[1] + t * dy];
+}
+
+/* ---------- figures ---------- */
+const FIG = {};
+FIG.tri = () => { const A = [30, 135], B = [210, 135], C = [95, 25];
+  return svg(240, 160, poly([A, B, C]) + tx([120, 152], "c", "#ff4f8b") + tx([50, 75], "a", "#3a86ff") + tx([165, 75], "b", "#2ec4b6")); };
+FIG.kinds = () => {
+  const t1 = [[10, 110], [90, 110], [55, 30]], t2 = [[115, 110], [195, 110], [115, 40]], t3 = [[210, 110], [300, 110], [228, 72]];
+  return svg(310, 140, poly(t1, "#d9fbf2") + poly(t2, "#fff3c4") + poly(t3, "#ffdbe4") + square(t2[0], t2[1], t2[2])
+    + arc(t3[0], t3[1], t3[2], 14) + tx([50, 130], "гострий", "#2b2350", 13) + tx([155, 130], "прямий", "#2b2350", 13) + tx([255, 130], "тупий", "#2b2350", 13)); };
+FIG.median = () => { const A = [25, 135], B = [215, 135], C = [90, 25], M = mid(A, B);
+  return svg(240, 160, poly([A, M, C], "#d9fbf2") + poly([M, B, C], "#ffe3f1") + ln(C, M, "#8338ec", 3.5) + tick(A, M, 1) + tick(M, B, 1)
+    + tx([25, 150], "A") + tx([215, 150], "B") + tx([90, 13], "C") + tx([120, 150], "M") + tx([118, 85], "m", "#8338ec")
+    + tx([70, 118], "S", "#2b2350", 14) + tx([160, 118], "S", "#2b2350", 14)); };
+FIG.bis = () => { const A = [25, 135], B = [110, 25], C = [215, 135], D = lerp(B, C, 0.4225);
+  return svg(240, 160, poly([A, B, C]) + ln(A, D, "#ff4f8b", 3.5) + arc(A, B, D, 26, "#2ec4b6") + arc(A, D, C, 32, "#2ec4b6")
+    + tx([20, 150], "A") + tx([110, 12], "B") + tx([225, 150], "C") + tx([D[0] + 12, D[1] - 6], "D", "#ff4f8b")); };
+FIG.cos = () => { const A = [30, 135], B = [120, 25], C = [215, 135];
+  return svg(240, 160, poly([A, B, C]) + arc(A, B, C, 26) + ln(B, C, "#3a86ff", 5)
+    + tx([22, 150], "A") + tx([120, 12], "B") + tx([225, 150], "C") + tx([60, 125], "∠A", "#ff4f8b", 13)
+    + tx([62, 75], "c") + tx([122, 152], "b") + tx([182, 72], "a", "#3a86ff")); };
+FIG.sin = () => { const O = [120, 85], A = [63.7, 117.5], B = [131.3, 21], C = [181.1, 107.2];
+  return svg(240, 170, cir(O, 65) + poly([A, B, C]) + dot(O, "#8338ec") + ln(O, C, "#8338ec", 2.5, "5 4")
+    + tx([52, 125], "A") + tx([133, 9], "B") + tx([194, 113], "C") + tx([153, 87], "R", "#8338ec") + tx([110, 87], "O", "#8338ec")); };
+FIG.areaH = () => { const A = [25, 135], C = [215, 135], B = [80, 30], H = [80, 135];
+  return svg(240, 160, poly([A, C, B]) + ln(B, H, "#ff4f8b", 3, "6 4") + square(H, C, B, 10)
+    + tx([90, 88], "h", "#ff4f8b") + tx([120, 152], "a", "#3a86ff")); };
+FIG.areaSin = () => { const C = [30, 135], A = [215, 135], B = [110, 30];
+  return svg(240, 160, poly([C, A, B]) + arc(C, A, B, 30) + tx([72, 122], "γ", "#ff4f8b", 17)
+    + tx([120, 152], "a", "#3a86ff") + tx([58, 78], "b", "#2ec4b6")); };
+FIG.heron = () => { const A = [30, 130], B = [210, 130], C = [95, 25];
+  return svg(240, 175, poly([A, B, C]) + tx([120, 146], "c") + tx([50, 72], "a") + tx([165, 72], "b")
+    + tx([120, 166], "p = (a + b + c) : 2", "#8338ec", 14)); };
+FIG.inR = () => { const A = [20, 140], B = [220, 140], C = [85, 20], [I, r] = incircle(A, B, C), T = [I[0], 140];
+  return svg(240, 160, poly([A, B, C]) + cir(I, r, "#2ec4b6", "#e5f8f5") + ln(I, T, "#2ec4b6", 2.5) + dot(I, "#2ec4b6") + tx([I[0] + 10, I[1] + 20], "r", "#2ec4b6")); };
+FIG.outR = FIG.sin;
+const RT = { A: [40, 20], C: [40, 140], B: [220, 140] };
+FIG.right = () => { const { A, B, C } = RT;
+  return svg(260, 165, poly([A, B, C]) + square(C, A, B) + arc(A, C, B, 24)
+    + ln(A, B, "#8338ec", 5) + ln(C, B, "#ff4f8b", 5) + ln(A, C, "#3a86ff", 5)
+    + tx([30, 14], "A") + tx([30, 150], "C") + tx([232, 150], "B")
+    + `<text x="148" y="74" transform="rotate(33.7 148 74)" text-anchor="middle" style="fill:#8338ec;font-size:13px">гіпотенуза</text>` + tx([130, 157], "протилежний до ∠A", "#ff4f8b", 12)
+    + `<text x="18" y="80" transform="rotate(-90 18 80)" text-anchor="middle" style="fill:#3a86ff;font-size:12px">прилеглий</text>`); };
+FIG.rightPlain = () => { const { A, B, C } = RT;
+  return svg(260, 165, poly([A, B, C]) + square(C, A, B) + ln(A, B, "#8338ec", 5)
+    + tx([28, 85], "b", "#3a86ff") + tx([130, 157], "a", "#ff4f8b") + tx([140, 68], "c", "#8338ec")
+    + tx([180, 40], "a² + b² = c²", "#2b2350", 14)); };
+FIG.metric = () => { const { A, B, C } = RT, K = foot(C, A, B);
+  return svg(260, 165, poly([A, B, C]) + square(C, A, B) + ln(C, K, "#ff4f8b", 3) + square(K, B, C, 9)
+    + tx([30, 14], "A") + tx([30, 150], "C") + tx([232, 150], "B") + tx([K[0] + 10, K[1] - 10], "K", "#ff4f8b")
+    + tx(mid(A, K).map((v, i) => v + (i ? -8 : 10)), "AK", "#3a86ff", 12) + tx(mid(K, B).map((v, i) => v + (i ? -8 : 10)), "KB", "#2ec4b6", 12)); };
+FIG.rightIn = () => { const { A, B, C } = RT, [I, r] = incircle(A, B, C);
+  return svg(260, 165, poly([A, B, C]) + square(C, A, B) + cir(I, r, "#2ec4b6", "#e5f8f5") + dot(I, "#2ec4b6") + ln(I, [I[0], 140], "#2ec4b6", 2.5)
+    + tx([I[0] + 9, I[1] + 18], "r", "#2ec4b6") + tx([28, 85], "b") + tx([130, 155], "a") + tx([140, 70], "c", "#8338ec")); };
+FIG.rightOut = () => { const A = [50, 50], B = [190, 130], C = [50, 130], O = mid(A, B), R = dist(O, A);
+  return svg(240, 180, cir(O, R) + poly([A, B, C]) + square(C, A, B) + ln(C, O, "#ff4f8b", 3, "6 4") + dot(O, "#8338ec")
+    + tx([O[0] + 8, O[1] - 14], "O", "#8338ec") + tx([40, 40], "A") + tx([202, 140], "B") + tx([40, 142], "C")
+    + tx([80, 100], "m", "#ff4f8b")); };
+FIG.eq = () => { const A = [45, 165], B = [195, 165], C = [120, 165 - 75 * Math.sqrt(3)], O = [120, 165 - 25 * Math.sqrt(3)];
+  const R = dist(O, A), r = 165 - O[1];
+  return svg(240, 215, cir(O, R, "#8338ec", "none", "6 4") + poly([A, B, C], "#fff3c4") + cir(O, r, "#2ec4b6", "#e5f8f5")
+    + ln(C, [120, 165], "#ff4f8b", 2.5, "5 4") + dot(O) + ln(O, B, "#8338ec", 2.5)
+    + tick(A, B) + tick(B, C) + tick(C, A) + tx([110, 145], "r", "#2ec4b6") + tx([162, 133], "R", "#8338ec") + tx([130, 85], "h", "#ff4f8b")); };
+function pair(kind){
+  const T = [[0, 110], [110, 110], [30, 30]];
+  const at = (dx) => T.map(p => [p[0] + dx + 10, p[1]]);
+  const one = (pts) => {
+    let s = poly(pts, "#fff");
+    const side = (i, j, n) => ln(pts[i], pts[j], "#ff4f8b", 5) + tick(pts[i], pts[j], n, "#ff4f8b");
+    if (kind === 1) { s += side(0, 1, 1) + side(0, 2, 2) + arc(pts[0], pts[1], pts[2], 20, "#3a86ff"); }
+    if (kind === 2) { s += side(0, 1, 1) + arc(pts[0], pts[1], pts[2], 20, "#3a86ff") + arc(pts[1], pts[0], pts[2], 20, "#2ec4b6"); }
+    if (kind === 3) { s += side(0, 1, 1) + side(0, 2, 2) + side(1, 2, 3); }
+    return s;
+  };
+  return svg(260, 125, one(at(0)) + one(at(130)) + tx([125, 75], "=", "#2b2350", 26));
+}
+FIG.eq1 = () => pair(1); FIG.eq2 = () => pair(2); FIG.eq3 = () => pair(3);
+FIG.sim = () => { const s = [[10, 90], [80, 90], [30, 40]], k = 1.6, b = s.map(p => [130 + (p[0] - 10) * k, 150 - (90 - p[1]) * k]);
+  return svg(260, 170, poly(s, "#d9fbf2") + poly(b, "#ffe3f1") + arc(s[0], s[1], s[2], 14) + arc(b[0], b[1], b[2], 20)
+    + tx([4, 102], "K") + tx([88, 102], "M") + tx([30, 28], "N") + tx([124, 162], "P") + tx([250, 162], "Q") + tx([162, 56], "R")
+    + tx([150, 18], "k = більший : менший", "#8338ec", 12)); };
+
+/* ---------- content ---------- */
+const LEVELS = [
+ { id: "any", name: "Будь-який трикутник", em: "🔺", c: "#ff4f8b",
+   intro: "Почнемо з простого: коли трикутник взагалі існує і як дізнатися, гострий він, прямий чи тупий.",
+   slides: [
+    { f: "ineq", t: "Нерівність трикутника", fig: "tri",
+      fm: L("a + b > c"),
+      mem: "Дві палички мають «дотягнутися» одна до одної над третьою. Якщо сума двох сторін ≤ третьої, трикутник не складеться.",
+      use: "Питання «Чи існує трикутник зі сторонами …?». Перевір: дві менші сторони разом більші за найбільшу." },
+    { f: "kind", t: "Гострий, прямий чи тупий?", fig: "kinds",
+      fm: L("a² + b² > c² → гострокутний", "a² + b² = c² → прямокутний", "a² + b² < c² → тупокутний"),
+      mem: "c — завжди НАЙБІЛЬША сторона. Якщо c² «переміг» (більший), кут проти нього великий — тупий.",
+      use: "Дано три сторони, питають вид трикутника.",
+      fix: "У конспекті не написано, що c — найбільша сторона. Без цього правило не працює." } ],
+   quiz: [
+    { f: "ineq", task: 1, q: "Чи існує трикутник зі сторонами 2, 3 і 7?", o: ["Ні, бо 2 + 3 < 7", "Так, будь-які три числа підходять", "Так, бо 7 > 2 + 3", "Ні, бо 7 — непарне"], e: "Дві менші сторони разом: 2 + 3 = 5. Це менше за 7, тому трикутника немає." },
+    { f: "ineq", q: "Яка умова має виконуватись для сторін трикутника?", o: ["a + b > c", "a + b = c", "a + b < c", "a · b > c"], e: "Сума двох сторін завжди більша за третю." },
+    { f: "kind", task: 1, q: "Сторони 5, 6 і 8. Який це трикутник?", o: ["Тупокутний", "Гострокутний", "Прямокутний", "Такого немає"], e: "5² + 6² = 25 + 36 = 61, а 8² = 64. 61 < 64, тому тупокутний." },
+    { f: "kind", task: 1, q: "Сторони 6, 8 і 10. Який це трикутник?", o: ["Прямокутний", "Гострокутний", "Тупокутний", "Рівносторонній"], e: "36 + 64 = 100 = 10². Рівність — значить прямокутний." },
+    { f: "kind", q: "c — найбільша сторона, і a² + b² > c². Трикутник…", o: ["гострокутний", "тупокутний", "прямокутний", "не існує"], e: "c² менший за суму — кут проти c менший за 90°." } ] },
+
+ { id: "medbis", name: "Медіана і бісектриса", em: "📏", c: "#ff9f1c",
+   intro: "Медіана йде в середину сторони. Бісектриса ділить кут навпіл.",
+   slides: [
+    { f: "median", t: "Довжина медіани", fig: "median",
+      fm: L(`m<sub>c</sub> = ${fr("1", "2")}${rt("2a² + 2b² − c²")}`),
+      mem: "«Дві сусідні сторони — подвоїти, свою сторону — відняти, корінь, і половина».",
+      use: "Відомі три сторони, треба знайти медіану." },
+    { f: "medArea", t: "Медіана і площа", fig: "median",
+      fm: L("S<sub>1</sub> = S<sub>2</sub>"),
+      mem: "Медіана ділить трикутник на два трикутники з однаковою площею (рівновеликі). Основи рівні, висота спільна.",
+      use: "Треба порівняти площі двох частин або знайти площу половини." },
+    { f: "bis1", t: "Властивість бісектриси", fig: "bis",
+      fm: L(`${fr("BD", "AB")} = ${fr("DC", "AC")}`),
+      mem: "Кожен відрізок ділимо на СВОЮ сусідню сторону: BD — біля AB, DC — біля AC.",
+      use: "Відомі дві сторони і один відрізок, треба знайти інший відрізок." },
+    { f: "bis2", t: "Довжина бісектриси", fig: "bis",
+      fm: L("AD² = AB · AC − BD · DC"),
+      mem: "«Добуток сторін мінус добуток відрізків».",
+      use: "Відомі сторони і відрізки, треба знайти саму бісектрису." } ],
+   quiz: [
+    { f: "median", q: "Формула медіани до сторони c:", o: [`${fr("1", "2")}${rt("2a² + 2b² − c²")}`, `${fr("1", "2")}${rt("a² + b² − c²")}`, `${rt("2a² + 2b² − c²")}`, `${fr("1", "2")}${rt("2a² + 2b² + c²")}`], e: "Дві сусідні — подвоїти, свою — відняти, корінь і половина." },
+    { f: "median", task: 1, q: "Відомі три сторони. Треба знайти медіану. Яку формулу взяти?", o: [`m<sub>c</sub> = ${fr("1", "2")}${rt("2a² + 2b² − c²")}`, "a / sin A = 2R", "S = p · r", `r = ${fr("a + b − c", "2")}`], e: "Медіана через три сторони — формула медіани." },
+    { f: "medArea", q: "Медіана ділить трикутник на два трикутники, у яких однакові…", o: ["площі", "периметри", "усі кути", "усі сторони"], e: "Рівні основи і спільна висота дають рівні площі." },
+    { f: "bis1", q: "AD — бісектриса кута A. Яка рівність правильна?", o: [`${fr("BD", "AB")} = ${fr("DC", "AC")}`, `${fr("BD", "AC")} = ${fr("DC", "AB")}`, "BD · DC = AB · AC", "BD = DC"], e: "Кожен відрізок ділимо на свою сусідню сторону." },
+    { f: "bis1", task: 1, q: "AD — бісектриса. AB = 6, AC = 9, BD = 4. Знайди DC.", o: ["6", "2,7", "4", "9"], e: "4 / 6 = DC / 9, тому DC = 9 · 4 / 6 = 6." },
+    { f: "bis2", q: "Довжина бісектриси AD:", o: ["AD² = AB · AC − BD · DC", "AD² = AB · AC + BD · DC", "AD² = BD · DC − AB · AC", "AD = AB · AC − BD · DC"], e: "Добуток сторін мінус добуток відрізків — і це AD у квадраті." } ] },
+
+ { id: "theorems", name: "Теореми косинусів і синусів", em: "⚖️", c: "#3a86ff",
+   intro: "Дві головні теореми для будь-якого трикутника. Вони працюють, навіть коли немає прямого кута.",
+   slides: [
+    { f: "cos", t: "Теорема косинусів", fig: "cos",
+      fm: L("a² = b² + c² − 2bc · cos A", "<small>(BC² = AB² + AC² − 2 · AB · AC · cos A)</small>"),
+      mem: "Це «Піфагор + поправка». Сторона a лежить НАВПРОТИ кута A. Якщо A = 90°, cos A = 0, і виходить звичайний Піфагор.",
+      use: "1) Дві сторони і кут МІЖ ними → третя сторона. 2) Три сторони → кут." },
+    { f: "sin", t: "Теорема синусів", fig: "sin",
+      fm: L(`${fr("a", "sin A")} = ${fr("b", "sin B")} = ${fr("c", "sin C")} = 2R`),
+      mem: "Кожна сторона ділиться на синус кута НАВПРОТИ неї. Усі ці дроби рівні — і дорівнюють діаметру описаного кола (2R).",
+      use: "1) Сторона і протилежний кут → R. 2) Два кути і сторона → інша сторона." } ],
+   quiz: [
+    { f: "cos", q: "Теорема косинусів:", o: ["a² = b² + c² − 2bc · cos A", "a² = b² + c² + 2bc · cos A", "a² = b² + c² − bc · cos A", "a² = b² + c² − 2bc · sin A"], e: "Мінус, двійка і косинус кута навпроти a." },
+    { f: "cos", task: 1, q: "Відомі дві сторони і кут МІЖ ними. Треба знайти третю сторону.", o: ["Теорема косинусів", "Теорема синусів", "Формула Герона", "S = p · r"], e: "Дві сторони + кут між ними → теорема косинусів." },
+    { f: "cos", task: 1, q: "Відомі всі три сторони. Треба знайти кут.", o: ["Теорема косинусів", "Теорема синусів", `S = ${fr("1", "2")}a · h`, `R = ${fr("c", "2")}`], e: "З теореми косинусів знаходимо cos кута, а з нього — кут." },
+    { f: "cos", task: 1, q: "b = 3, c = 5, ∠A = 60°. Знайди a².", o: ["19", "34", "49", "4"], e: "a² = 9 + 25 − 2 · 3 · 5 · ½ = 34 − 15 = 19." },
+    { f: "sin", q: "Теорема синусів:", o: [`${fr("a", "sin A")} = ${fr("b", "sin B")} = 2R`, `${fr("a", "sin A")} = ${fr("b", "sin B")} = R`, `a · sin A = b · sin B`, `${fr("a", "sin B")} = ${fr("b", "sin A")}`], e: "Сторона ділиться на синус кута навпроти, і це 2R." },
+    { f: "sin", task: 1, q: "Відомі сторона a і кут A навпроти неї. Треба знайти радіус описаного кола R.", o: [`${fr("a", "sin A")} = 2R`, `r = ${fr("S", "p")}`, "S = p · r", "a² = b² + c² − 2bc · cos A"], e: "Сторона і кут навпроти → теорема синусів, там є 2R." },
+    { f: "sin", task: 1, q: "Відомі два кути і одна сторона. Треба знайти іншу сторону.", o: ["Теорема синусів", "Теорема косинусів", "Формула Герона", "Формула медіани"], e: "Кути + сторона → теорема синусів." } ] },
+
+ { id: "area", name: "Площа трикутника", em: "🟩", c: "#2ec4b6",
+   intro: "П'ять формул площі. Головне — знати, ЩО дано в задачі, і взяти формулу саме з цими буквами.",
+   slides: [
+    { f: "S1", t: "Через сторону і висоту", fig: "areaH",
+      fm: L(`S = ${fr("1", "2")} a · h`),
+      mem: "Половина прямокутника: основа × висота і поділити на 2.",
+      use: "Дано сторону і висоту, проведену ДО НЕЇ." },
+    { f: "S2", t: "Через дві сторони і кут", fig: "areaSin",
+      fm: L(`S = ${fr("1", "2")} a · b · sin γ`),
+      mem: "Кут γ — саме МІЖ сторонами a і b. Як «сендвіч»: дві сторони, а між ними кут.",
+      use: "Дано дві сторони і кут між ними, треба площу." },
+    { f: "heron", t: "Формула Герона", fig: "heron",
+      fm: L(`S = ${rt("p(p − a)(p − b)(p − c)")}`, `p = ${fr("a + b + c", "2")}`),
+      mem: "p — це ПІВпериметр. Під коренем: p і три «p мінус сторона».",
+      use: "Дано тільки три сторони, і більше нічого." },
+    { f: "SR", t: "Через радіус описаного кола R", fig: "outR",
+      fm: L(`S = ${fr("abc", "4R")}`, `R = ${fr("abc", "4S")}`),
+      mem: "Великий R — Великий (описаний) круг. abc зверху, 4 внизу. S і R міняються місцями.",
+      use: "Знайти R, коли відомі три сторони (S — за Героном)." },
+    { f: "Sr", t: "Через радіус вписаного кола r", fig: "inR",
+      fm: L("S = p · r", `r = ${fr("S", "p")}`),
+      mem: "Маленький r — маленьке (вписане) коло. p — ПІВпериметр, не весь периметр!",
+      use: "Знайти r, коли відомі площа і сторони." } ],
+   quiz: [
+    { f: "S1", task: 1, q: "Відомі сторона і висота до неї. Знайди площу.", o: [`S = ${fr("1", "2")} a · h`, `S = ${fr("abc", "4R")}`, "S = p · r", `S = ${fr("1", "2")} ab · sin γ`], e: "Сторона + висота → ½ a · h." },
+    { f: "S2", task: 1, q: "Відомі дві сторони і кут між ними. Треба знайти ПЛОЩУ.", o: [`S = ${fr("1", "2")} ab · sin γ`, "Теорема косинусів", "Формула Герона", "S = p · r"], e: "Дві сторони + кут між ними + питають площу → ½ ab · sin γ." },
+    { f: "S2", task: 1, q: "a = 4, b = 6, кут між ними 30°. S = ?", o: ["6", "12", "24", "3"], e: "S = ½ · 4 · 6 · ½ = 6 (sin 30° = ½)." },
+    { f: "heron", task: 1, q: "Відомі тільки три сторони. Знайди площу.", o: ["Формула Герона", `S = ${fr("1", "2")} a · h`, `S = ${fr("1", "2")} ab · sin γ`, "Теорема синусів"], e: "Тільки три сторони → Герон." },
+    { f: "heron", q: "Що таке p у формулі Герона?", o: ["Півпериметр: (a + b + c) : 2", "Периметр: a + b + c", "Площа", "Радіус"], e: "p — половина периметра." },
+    { f: "SR", task: 1, q: "Відомі три сторони і площа. Знайди радіус ОПИСАНОГО кола.", o: [`R = ${fr("abc", "4S")}`, `r = ${fr("S", "p")}`, `R = ${fr("c", "2")}`, "S = p · r"], e: "Описане коло — великий R = abc / (4S)." },
+    { f: "Sr", task: 1, q: "Відомі площа і всі сторони. Знайди радіус ВПИСАНОГО кола.", o: [`r = ${fr("S", "p")}`, `R = ${fr("abc", "4S")}`, `r = ${fr("a + b − c", "2")}`, `R = ${fr("a", "√3")}`], e: "Вписане коло — маленький r = S / p." },
+    { f: "Sr", task: 1, q: "S = 24, p = 12. Знайди r.", o: ["2", "12", "288", "4"], e: "r = S / p = 24 / 12 = 2." } ] },
+
+ { id: "right", name: "Прямокутний трикутник", em: "📐", c: "#8338ec",
+   intro: "∠C = 90°. Сторона навпроти прямого кута — гіпотенуза (c, найдовша). Дві інші — катети (a, b).",
+   slides: [
+    { f: "pyth", t: "Теорема Піфагора", fig: "rightPlain",
+      fm: L("a² + b² = c²"),
+      mem: "Катет² + катет² = гіпотенуза². Відомі трійки: 3-4-5, 6-8-10, 5-12-13.",
+      use: "Дві сторони прямокутного трикутника відомі — знайди третю." },
+    { f: "sinA", t: "Синус і косинус", fig: "right",
+      fm: L(`sin A = ${fr("CB", "AB")} = ${fr("протилежний", "гіпотенуза")}`, `cos A = ${fr("AC", "AB")} = ${fr("прилеглий", "гіпотенуза")}`),
+      mem: "КОсинус — катет, що лежить КОло кута (поруч). Синус — катет навпроти. Гіпотенуза завжди внизу дробу.",
+      use: "Відомі кут і гіпотенуза → катет. Або навпаки." },
+    { f: "tgA", t: "Тангенс і котангенс", fig: "right",
+      fm: L(`tg A = ${fr("CB", "AC")} = ${fr("протилежний", "прилеглий")}`, `ctg A = ${fr("AC", "CB")} = ${fr("прилеглий", "протилежний")}`),
+      mem: "Тут гіпотенузи немає — тільки катети. Котангенс — це тангенс, перевернутий догори дриґом.",
+      use: "Відомі кут і один катет → інший катет.",
+      fix: "У конспекті рядок «ctg ∠A =» порожній. Правильно: ctg A = AC / CB." },
+    { f: "metric", t: "Метричні співвідношення", fig: "metric",
+      fm: L("CK² = AK · KB", "AC² = AB · AK", "CB² = AB · KB"),
+      mem: "CK — висота до гіпотенузи. Висота² = добуток двох шматочків. Катет² = вся гіпотенуза × шматочок БІЛЯ цього катета (його проекція).",
+      use: "У задачі є висота, проведена до гіпотенузи." },
+    { f: "rin", t: "Вписане коло", fig: "rightIn",
+      fm: L(`r = ${fr("a + b − c", "2")}`),
+      mem: "Катети додаємо, гіпотенузу віднімаємо, ділимо на 2.",
+      use: "Прямокутний трикутник + радіус вписаного кола." },
+    { f: "rout", t: "Описане коло і медіана", fig: "rightOut",
+      fm: L(`R = ${fr("c", "2")}`, `m<sub>c</sub> = ${fr("c", "2")}`),
+      mem: "Центр описаного кола — СЕРЕДИНА гіпотенузи. Тому R і медіана до гіпотенузи — це половина гіпотенузи.",
+      use: "Прямокутний трикутник + описане коло або медіана до гіпотенузи." } ],
+   quiz: [
+    { f: "pyth", task: 1, q: "Катети 6 і 8. Знайди гіпотенузу.", o: ["10", "14", "48", "100"], e: "c² = 36 + 64 = 100, c = 10." },
+    { f: "sinA", fig: "right", q: "sin A = ?", o: [fr("CB", "AB"), fr("AC", "AB"), fr("CB", "AC"), fr("AC", "CB")], e: "Синус — протилежний катет (CB) / гіпотенуза (AB)." },
+    { f: "sinA", fig: "right", q: "cos A = ?", o: [fr("AC", "AB"), fr("CB", "AB"), fr("CB", "AC"), fr("AB", "AC")], e: "Косинус — прилеглий катет (AC) / гіпотенуза (AB)." },
+    { f: "tgA", fig: "right", q: "tg A = ?", o: [fr("CB", "AC"), fr("AC", "CB"), fr("CB", "AB"), fr("AC", "AB")], e: "Тангенс — протилежний / прилеглий." },
+    { f: "tgA", fig: "right", q: "ctg A = ?", o: [fr("AC", "CB"), fr("CB", "AC"), fr("AB", "CB"), fr("AC", "AB")], e: "Котангенс — прилеглий / протилежний." },
+    { f: "metric", fig: "metric", q: "CK — висота до гіпотенузи. CK² = ?", o: ["AK · KB", "AB · AK", "AC · CB", "AK + KB"], e: "Висота² = добуток двох шматочків гіпотенузи." },
+    { f: "metric", fig: "metric", q: "AC² = ?", o: ["AB · AK", "AB · KB", "AK · KB", "AC · CB"], e: "Катет AC² = вся гіпотенуза × шматочок біля A (AK)." },
+    { f: "rin", task: 1, q: "Катети 6 і 8, гіпотенуза 10. Знайди r вписаного кола.", o: ["2", "5", "12", "4"], e: "r = (6 + 8 − 10) / 2 = 2." },
+    { f: "rout", task: 1, q: "Прямокутний трикутник, гіпотенуза 10. Знайди R описаного кола.", o: ["5", "10", "20", "2"], e: "R = c / 2 = 5." },
+    { f: "rout", q: "Медіана до гіпотенузи дорівнює…", o: ["половині гіпотенузи", "катету", "гіпотенузі", "висоті"], e: "m = c / 2, бо вона йде в центр описаного кола." } ] },
+
+ { id: "equi", name: "Рівносторонній трикутник", em: "🔷", c: "#7bd84a",
+   intro: "Усі сторони = a, усі кути = 60°. Тут усе виражається через одну сторону a, і всюди є √3.",
+   slides: [
+    { f: "eqh", t: "Висота", fig: "eq",
+      fm: L(`h = ${fr("a√3", "2")}`),
+      mem: "Половина сторони, помножена на √3.",
+      use: "Дано сторону — треба висоту (або навпаки)." },
+    { f: "eqS", t: "Площа", fig: "eq",
+      fm: L(`S = ${fr("a²√3", "4")}`),
+      mem: "Як висота, тільки a у квадраті і внизу 4 (а не 2).",
+      use: "Дано сторону рівностороннього — треба площу." },
+    { f: "eqR", t: "Радіуси R і r", fig: "eq",
+      fm: L(`R = ${fr("a", "√3")}`, `r = ${fr("a", "2√3")}`, "R = 2r, h = R + r"),
+      mem: "Великий R удвічі більший за маленький r. Висота = R + r = 3r. Тобто r = h/3, R = 2h/3.",
+      use: "Рівносторонній трикутник + вписане чи описане коло.",
+      fix: "У конспекті все правильно. У підручнику можуть писати інакше: R = a√3/3, r = a√3/6 — це ті самі числа." } ],
+   quiz: [
+    { f: "eqh", q: "Висота рівностороннього трикутника:", o: [fr("a√3", "2"), fr("a√3", "4"), fr("a√2", "2"), fr("a", "2")], e: "h = a√3 / 2." },
+    { f: "eqS", q: "Площа рівностороннього трикутника:", o: [fr("a²√3", "4"), fr("a²√3", "2"), fr("a√3", "4"), fr("a²", "2")], e: "S = a²√3 / 4." },
+    { f: "eqR", q: "Радіус ОПИСАНОГО кола (R):", o: [fr("a", "√3"), fr("a", "2√3"), fr("a√3", "2"), fr("a", "2")], e: "R = a / √3. Він удвічі більший за r." },
+    { f: "eqR", q: "Радіус ВПИСАНОГО кола (r):", o: [fr("a", "2√3"), fr("a", "√3"), fr("a√3", "4"), fr("a", "3")], e: "r = a / (2√3) — половина R." },
+    { f: "eqh", task: 1, q: "Сторона рівностороннього трикутника a = 6. Знайди h.", o: ["3√3", "6√3", "3", "9√3"], e: "h = 6√3 / 2 = 3√3." },
+    { f: "eqR", q: "Як пов'язані R і r у рівносторонньому трикутнику?", o: ["R = 2r", "R = r", "r = 2R", "R = 3r"], e: "Центр ділить висоту 2 : 1, тому R = 2r." } ] },
+
+ { id: "simeq", name: "Рівність і подібність", em: "👯", c: "#ef476f",
+   intro: "Рівні трикутники — однакові «копії». Подібні — однакова форма, але один більший (у k разів).",
+   slides: [
+    { f: "eq1", t: "1-а ознака рівності: СКС", fig: "eq1",
+      fm: L("сторона + кут + сторона"),
+      mem: "Дві сторони і кут МІЖ ними рівні → трикутники рівні.",
+      use: "Задачі на доведення рівності трикутників." },
+    { f: "eq2", t: "2-а ознака рівності: КСК", fig: "eq2",
+      fm: L("кут + сторона + кут"),
+      mem: "Сторона і два кути, що ПРИЛЕГЛІ до неї (на її кінцях), рівні → трикутники рівні.",
+      use: "Задачі на доведення рівності трикутників." },
+    { f: "eq3", t: "3-я ознака рівності: ССС", fig: "eq3",
+      fm: L("сторона + сторона + сторона"),
+      mem: "Три сторони одного = три сторони іншого → трикутники рівні.",
+      use: "Задачі на доведення рівності трикутників." },
+    { f: "sim", t: "Подібні трикутники", fig: "sim",
+      fm: L("△KMN ∼ △PQR", `${fr("PQ", "KM")} = ${fr("QR", "MN")} = ${fr("PR", "KN")} = k`),
+      mem: "Порядок букв важливий: K↔P, M↔Q, N↔R. Беремо сторони з ТИМИ САМИМИ місцями букв. Навпроти рівних кутів — пропорційні сторони.",
+      use: "Відомі сторони одного трикутника і k → сторони іншого.",
+      fix: "У конспекті KM/QR і MN/QP — помилка. Правильно: KM ↔ PQ, MN ↔ QR, KN ↔ PR. Тут k = більший : менший." },
+    { f: "simS", t: "Площі подібних", fig: "sim",
+      fm: L(`${fr("S<sub>PQR</sub>", "S<sub>KMN</sub>")} = k²`),
+      mem: "Сторони більші в k разів → площа більша в k² разів. Площа — це «квадратні» одиниці, тому квадрат.",
+      use: "Відомі k і одна площа → інша площа." } ],
+   quiz: [
+    { f: "eq1", fig: "eq1", q: "Яка це ознака рівності?", o: ["Дві сторони і кут між ними (1-а)", "Сторона і два прилеглі кути (2-а)", "Три сторони (3-я)", "Це не ознака"], e: "Дві сторони + кут між ними — перша ознака." },
+    { f: "eq2", fig: "eq2", q: "Яка це ознака рівності?", o: ["Сторона і два прилеглі кути (2-а)", "Дві сторони і кут між ними (1-а)", "Три сторони (3-я)", "Ознака подібності"], e: "Сторона + два кути на її кінцях — друга ознака." },
+    { f: "eq3", task: 1, q: "Три сторони одного трикутника дорівнюють трьом сторонам іншого. Трикутники…", o: ["рівні (3-я ознака)", "тільки подібні", "нічого не можна сказати", "рівні, тільки якщо прямокутні"], e: "Три сторони — третя ознака рівності." },
+    { f: "sim", q: "△KMN ∼ △PQR. Яка рівність правильна?", o: [`${fr("KM", "PQ")} = ${fr("MN", "QR")} = ${fr("KN", "PR")}`, `${fr("KM", "QR")} = ${fr("MN", "QP")} = ${fr("KN", "PR")}`, `${fr("KM", "PR")} = ${fr("MN", "PQ")} = ${fr("KN", "QR")}`, "KM · PQ = MN · QR"], e: "Букви на тих самих місцях: K↔P, M↔Q, N↔R." },
+    { f: "sim", task: 1, q: "Сторони малого трикутника 3, 4, 5. k = 2. Сторони великого?", o: ["6, 8, 10", "9, 16, 25", "5, 6, 7", "1,5; 2; 2,5"], e: "Кожну сторону множимо на k = 2." },
+    { f: "simS", task: 1, q: "Трикутники подібні, k = 3. У скільки разів більша площа?", o: ["у 9 разів", "у 3 рази", "у 6 разів", "у 27 разів"], e: "Площі відносяться як k² = 9." },
+    { f: "simS", task: 1, q: "S малого = 5, k = 2. Знайди S великого.", o: ["20", "10", "7", "25"], e: "S = 5 · 2² = 20." } ] }
+];
+
+const FORMULAS = [];
+LEVELS.forEach((l, li) => l.slides.forEach(s => { if (!FORMULAS.find(f => f.f === s.f)) { FORMULAS.push({ f: s.f, t: s.t, fm: s.fm, li }); } }));
+
+/* ---------- theory extras: letters, why, example ---------- */
+const EXTRA = {
+  ineq:   { lg: "a, b, c — сторони трикутника.", why: "Найкоротший шлях між двома точками — пряма. Обхід через третю вершину завжди довший.", ex: "3, 4, 8: 3 + 4 = 7 < 8 → трикутника немає. 3, 4, 5: 7 > 5 → є." },
+  kind:   { lg: "c — найбільша сторона, a і b — дві інші.", why: "Чим більший кут проти c, тим довша c. Рівно 90° — рівно Піфагор.", ex: "4, 5, 6: 16 + 25 = 41 > 36 → гострокутний." },
+  median: { lg: "m<sub>c</sub> — медіана до сторони c; a, b — дві інші сторони.", why: "Медіана йде у середину сторони c. Формулу виводять з теореми косинусів.", ex: "a = 5, b = 5, c = 6: m = ½√(50 + 50 − 36) = ½√64 = 4." },
+  medArea:{ lg: "S<sub>1</sub>, S<sub>2</sub> — площі двох частин.", why: "Основи частин рівні (AM = MB), а висота з вершини C спільна. Тому ½ · основа · висота однакова.", ex: "Площа трикутника 20 → кожна частина 10." },
+  bis1:   { lg: "AD — бісектриса кута A; BD і DC — частини сторони BC.", why: "Довша сторона «тягне» до себе довший відрізок.", ex: "AB = 4, AC = 6, BC = 5 → BD : DC = 4 : 6 → BD = 2, DC = 3." },
+  bis2:   { lg: "AD — бісектриса; AB, AC — сторони кута; BD, DC — відрізки.", why: "Це готовий результат: просто підстав числа.", ex: "AB = 4, AC = 6, BD = 2, DC = 3: AD² = 24 − 6 = 18 → AD = 3√2." },
+  cos:    { lg: "a — сторона НАВПРОТИ кута A; b, c — сторони, що утворюють кут A.", why: "Це Піфагор з поправкою. Якщо A = 90°, cos A = 0, і поправка зникає.", ex: "b = 3, c = 5, A = 60°: a² = 9 + 25 − 2·3·5·½ = 19 → a = √19." },
+  sin:    { lg: "a, b, c — сторони; A, B, C — кути навпроти них; R — радіус описаного кола.", why: "Проти більшої сторони лежить більший кут.", ex: "a = 6, A = 30°: 6 : ½ = 12 = 2R → R = 6." },
+  S1:     { lg: "a — сторона; h — висота, проведена САМЕ до сторони a.", why: "Трикутник — це половина прямокутника a × h.", ex: "a = 8, h = 5 → S = ½ · 8 · 5 = 20." },
+  S2:     { lg: "a, b — дві сторони; γ — кут МІЖ ними.", why: "b · sin γ — це висота до сторони a. Тобто це та сама ½ a · h.", ex: "a = 4, b = 6, γ = 30° → S = ½ · 4 · 6 · ½ = 6." },
+  heron:  { lg: "a, b, c — сторони; p — півпериметр.", why: "Це готова формула для випадку, коли відомі тільки сторони.", ex: "3, 4, 5: p = 6 → S = √(6 · 3 · 2 · 1) = √36 = 6." },
+  SR:     { lg: "R — радіус ОПИСАНОГО кола (коло проходить через вершини).", why: "Поєднує площу, три сторони і R. Знаєш три з них — знайдеш четверте.", ex: "3, 4, 5, S = 6: R = 3·4·5 : (4·6) = 60 : 24 = 2,5." },
+  Sr:     { lg: "r — радіус ВПИСАНОГО кола (коло торкається сторін); p — півпериметр.", why: "Розріж трикутник від центру кола на 3 частини з висотою r: S = ½ar + ½br + ½cr = p · r.", ex: "3, 4, 5: S = 6, p = 6 → r = 1." },
+  pyth:   { lg: "a, b — катети; c — гіпотенуза (навпроти прямого кута).", why: "Квадрат на гіпотенузі = сумі квадратів на катетах.", ex: "Катети 5 і 12 → c² = 25 + 144 = 169 → c = 13." },
+  sinA:   { lg: "AB — гіпотенуза; CB — катет НАВПРОТИ ∠A; AC — катет БІЛЯ ∠A.", why: "Катет коротший за гіпотенузу, тому sin і cos завжди менші за 1.", ex: "AB = 10, ∠A = 30° → CB = 10 · sin 30° = 5." },
+  tgA:    { lg: "CB — протилежний катет; AC — прилеглий катет.", why: "tg A · ctg A = 1, бо це один і той самий дріб, перевернутий.", ex: "AC = 4, tg A = ¾ → CB = 4 · ¾ = 3." },
+  metric: { lg: "CK — висота до гіпотенузи; AK, KB — проекції катетів (шматочки гіпотенузи).", why: "Висота ділить трикутник на два маленькі, подібні до великого.", ex: "AK = 4, KB = 9 → CK² = 36 → CK = 6." },
+  rin:    { lg: "a, b — катети; c — гіпотенуза; r — радіус вписаного кола.", why: "Дотичні з однієї вершини до кола рівні. Тому гіпотенуза «забирає» частину катетів.", ex: "6, 8, 10 → r = (6 + 8 − 10) : 2 = 2." },
+  rout:   { lg: "c — гіпотенуза; R — радіус описаного кола; m<sub>c</sub> — медіана до гіпотенузи.", why: "Прямий кут спирається на діаметр. Тому гіпотенуза — це діаметр кола.", ex: "c = 10 → R = 5 і медіана = 5." },
+  eqh:    { lg: "a — сторона; h — висота.", why: "Висота ділить сторону навпіл. Піфагор: h² = a² − (a/2)² = 3a²/4.", ex: "a = 4 → h = 4√3 : 2 = 2√3." },
+  eqS:    { lg: "a — сторона.", why: "S = ½ · a · h = ½ · a · a√3/2 = a²√3/4.", ex: "a = 4 → S = 16√3 : 4 = 4√3." },
+  eqR:    { lg: "R — описане коло, r — вписане коло; центр у них спільний.", why: "Центр ділить висоту у відношенні 2 : 1. Тому R = ⅔h, r = ⅓h.", ex: "a = 6 → h = 3√3, R = 2√3, r = √3." },
+  eq1:    { lg: "Позначки: однакові рисочки — рівні сторони, однакові дужки — рівні кути.", ex: "Запис: △ABC = △KMN за 1-ю ознакою (за двома сторонами і кутом між ними)." },
+  eq2:    { lg: "Кути мають бути саме НА КІНЦЯХ цієї сторони.", ex: "Запис: △ABC = △KMN за 2-ю ознакою (за стороною і двома прилеглими кутами)." },
+  eq3:    { lg: "Кути перевіряти не треба — досить трьох сторін.", ex: "Запис: △ABC = △KMN за 3-ю ознакою (за трьома сторонами)." },
+  sim:    { lg: "k — коефіцієнт подібності: у скільки разів більший трикутник більший за менший.", why: "Однакова форма — однакові кути. Сторони просто «розтягнуті» у k разів.", ex: "KM = 3, PQ = 6 → k = 2. MN = 4 → QR = 8." },
+  simS:   { lg: "S — площі; k — коефіцієнт подібності.", why: "Площа — це довжина × довжина. Кожна множиться на k, тому разом k · k = k².", ex: "k = 3, менша площа 2 → більша площа 2 · 9 = 18." }
+};
+LEVELS.forEach(l => l.slides.forEach(s => Object.assign(s, EXTRA[s.f] || {})));
+
+const LINKS = [
+  { a: "Теорема косинусів", b: "Піфагор", how: "Кут A = 90° → cos 90° = 0 → a² = b² + c²." },
+  { a: "Теорема синусів", b: "R = c/2 (прямокутний)", how: "Кут C = 90° → sin 90° = 1 → c = 2R." },
+  { a: "S = ½ ab · sin γ", b: "S = ½ ab (прямокутний)", how: "γ = 90° → sin 90° = 1. Площа = половина добутку катетів." },
+  { a: "Формула Герона", b: "R = abc/4S і r = S/p", how: "Спочатку знайди S за Героном. Потім з неї R і r." },
+  { a: "r = S/p", b: "r = (a + b − c)/2", how: "Для прямокутного обидві дають одне число. Приклад 3, 4, 5: обидві дають r = 1." },
+  { a: "R = c/2", b: "медіана m<sub>c</sub> = c/2", how: "Медіана до гіпотенузи йде в центр описаного кола. Це і є R." },
+  { a: "h = a√3/2 (рівносторонній)", b: "S, R, r", how: "S = ½ a · h; R = ⅔ h; r = ⅓ h. Усе з висоти." },
+  { a: "Подібність, k", b: "площі k²", how: "Сторони × k, площа × k², бо площа — це довжина × довжина." }
+];
+
+const PICK = [
+  ["Три сторони, треба ПЛОЩУ", "Формула Герона", "area"],
+  ["Три сторони, треба КУТ", "Теорема косинусів", "theorems"],
+  ["Дві сторони + кут МІЖ ними, треба третю СТОРОНУ", "Теорема косинусів", "theorems"],
+  ["Дві сторони + кут МІЖ ними, треба ПЛОЩУ", "S = ½ ab · sin γ", "area"],
+  ["Сторона + кут НАВПРОТИ неї", "Теорема синусів (= 2R)", "theorems"],
+  ["Два кути + сторона, треба іншу сторону", "Теорема синусів", "theorems"],
+  ["Сторона + висота до неї", "S = ½ a · h", "area"],
+  ["Три сторони, треба МЕДІАНУ", "Формула медіани", "medbis"],
+  ["Є БІСЕКТРИСА, треба відрізки", "BD/AB = DC/AC", "medbis"],
+  ["Сторони і площа, треба R", "R = abc/4S", "area"],
+  ["Площа і периметр, треба r", "r = S/p", "area"],
+  ["Прямокутний, треба r", "r = (a + b − c)/2", "right"],
+  ["Прямокутний, треба R або медіану до гіпотенузи", "c/2", "right"],
+  ["Прямокутний, висота до гіпотенузи", "CK² = AK · KB", "right"],
+  ["Рівносторонній, дано тільки сторону a", "h, S, R, r через a і √3", "equi"],
+  ["Подібні трикутники, треба площу", "S₂ : S₁ = k²", "simeq"]
+];
+
+const RU_N = n => n < 5 ? "формули" : "формул";
+const main = document.getElementById("main");
+
+const navHtml = LEVELS.map((l, i) => `<a href="#g-${l.id}" style="--c:${l.c}">${l.em} ${i + 1}. ${l.name}</a>`).join("")
+  + `<a href="#pick" style="--c:#ffb703">🧭 Що брати?</a><a href="#links" style="--c:#8338ec">🔗 Зв'язки</a>`;
+document.getElementById("nav").innerHTML = navHtml;
+
+const hero = `<div class="card hero">
+  <b>Як вчити з цієї сторінки:</b>
+  <ol>
+    <li>Прочитай одну групу. Подивись на малюнок і знайди на ньому кожну букву з формули.</li>
+    <li>Прочитай «🧠 Запам'ятай» і розбери приклад.</li>
+    <li>Натисни <b>🙈 Перевір себе</b> (кнопка внизу праворуч). Формули сховаються. Скажи кожну вголос і торкнись, щоб перевірити.</li>
+    <li>Пройди тест цієї групи в грі.</li>
+  </ol>
+  <div class="row"><a class="btn go" href="#pick">🧭 Що дано → яку формулу брати</a><a class="btn light" href="#links">🔗 Як формули пов'язані</a></div>
+</div>`;
+
+function formulaCard(l, li, s, si){
+  const it = (ic, txt, cls = "") => txt ? `<div class="it ${cls}"><b>${ic}</b><span>${txt}</span></div>` : "";
+  return `<div class="card fc" style="--c:${l.c}">
+    <h3><span class="n">${li + 1}.${si + 1}</span>${s.t}</h3>
+    <div class="formula" onclick="this.classList.toggle('show')">${s.fm}</div>
+    ${FIG[s.fig]()}
+    ${it("📖", s.lg ? "<b>Букви:</b> " + s.lg : "")}
+    ${it("🧠", "<b>Запам'ятай:</b> " + s.mem, "mem")}
+    ${it("✏️", s.ex ? "<b>Приклад:</b> " + s.ex : "")}
+    ${it("🎯", "<b>Коли брати:</b> " + s.use)}
+    ${s.why ? `<details><summary>💡 Чому так?</summary>${s.why}</details>` : ""}
+    ${it("⚠️", s.fix ? "<b>Увага (конспект):</b> " + s.fix : "", "fix")}
+  </div>`;
+}
+
+const groups = LEVELS.map((l, li) => `<section class="grp" id="g-${l.id}" style="--c:${l.c}">
+  <div class="band"><span class="em">${l.em}</span><div><div class="k">Група ${li + 1} · ${l.slides.length} ${RU_N(l.slides.length)}</div><h2>${l.name}</h2><p>${l.intro}</p></div></div>
+  <div class="grid">${l.slides.map((s, si) => formulaCard(l, li, s, si)).join("")}</div>
+  <div class="after"><a class="btn go" href="./#quiz=${li}">🎮 Перевір себе: тест «${l.name}»</a></div>
+</section>`).join("");
+
+const colorOf = id => (LEVELS.find(l => l.id === id) || {}).c || "#2b2350";
+const pick = `<section class="grp" id="pick" style="--c:#ffb703">
+  <div class="band"><span class="em">🧭</span><div><div class="k">Шпаргалка до задач</div><h2>Що дано → яку формулу брати</h2><p>Знайди рядок, де є ТЕ, що дано в задачі.</p></div></div>
+  <div class="card" style="margin-top:14px"><table>${PICK.map(([g, f, id]) =>
+    `<tr><td>${g}</td><td><a href="#g-${id}" class="ans" style="--c:${colorOf(id)}"><span class="ans" style="--c:${colorOf(id)}">→ ${f}</span></a></td></tr>`).join("")}</table></div>
+</section>`;
+
+const links = `<section class="grp" id="links" style="--c:#8338ec">
+  <div class="band"><span class="em">🔗</span><div><div class="k">Щоб менше зубрити</div><h2>Як формули пов'язані</h2><p>Багато формул — це одна й та сама ідея. Знаєш одну — легко згадаєш іншу.</p></div></div>
+  <div class="links" style="margin-top:14px">${LINKS.map(k =>
+    `<div class="card lk"><div class="ab"><span>${k.a}</span><i>→</i><span>${k.b}</span></div><p>${k.how}</p></div>`).join("")}</div>
+</section>`;
+
+main.innerHTML = hero + groups + pick + links
+  + `<div class="foot"><a class="btn pink" href="./" style="font-size:19px;padding:16px 26px">🎮 Тепер — у гру!</a></div>`;
+
+function toggleTest(){
+  const on = document.body.classList.toggle("test");
+  document.querySelectorAll(".formula.show").forEach(f => f.classList.remove("show"));
+  document.getElementById("toggle").textContent = on ? "👀 Показати формули" : "🙈 Перевір себе";
+}
+</script>
+</body>
+</html>
