@@ -22,5 +22,14 @@
     "kind": "pairs",
     "count": 67,
     "updated": "2026-11-15"
+  },
+  {
+    "slug": "triangles",
+    "title": "Трикутники: формули",
+    "emoji": "📐",
+    "kind": "formulas",
+    "count": 27,
+    "unit": "формул",
+    "updated": "2026-11-18"
   }
 ]
