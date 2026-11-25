@@ -31,5 +31,14 @@
     "count": 27,
     "unit": "формул",
     "updated": "2026-11-18"
+  },
+  {
+    "slug": "circle-similarity",
+    "title": "Подібність і коло",
+    "emoji": "⭕",
+    "kind": "formulas",
+    "count": 9,
+    "unit": "формул",
+    "updated": "2026-11-25"
   }
 ]

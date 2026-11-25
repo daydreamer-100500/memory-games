@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Подібність і коло">
+<meta name="theme-color" content="#fff8ef">
+<title>Подібність і коло: теорія</title>
+<style>
+:root{
+  --bg:#fff8ef; --card:#fff; --ink:#2b2350; --muted:#7a7399;
+  --pink:#ff4f8b; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2ec4b6; --lime:#7bd84a;
+  --blue:#3a86ff; --violet:#8338ec; --red:#ef476f;
+  --shadow:0 6px 0 rgba(43,35,80,.12), 0 12px 28px rgba(43,35,80,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);line-height:1.45;
+  background:radial-gradient(circle at 10% 0%,#ffe3f1 0,transparent 40%),radial-gradient(circle at 90% 10%,#dff3ff 0,transparent 40%),var(--bg);
+  -webkit-tap-highlight-color:transparent}
+header{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 16px 6px;max-width:1040px;margin:0 auto}
+h1{margin:0;font-size:22px}
+h1 .acc{color:var(--pink)}
+.home{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);text-decoration:none;font-size:22px;flex:none}
+.btn{display:inline-block;border:0;border-radius:16px;padding:12px 16px;font-size:16px;font-weight:800;cursor:pointer;background:var(--ink);color:#fff;box-shadow:var(--shadow);text-decoration:none;text-align:center}
+.btn.go{background:var(--green)}
+.btn.pink{background:var(--pink)}
+.btn.light{background:#fff;color:var(--ink)}
+header .btn{flex:none;padding:10px 12px}
+header h1{flex:1}
+nav{position:sticky;top:0;z-index:5;background:rgba(255,248,239,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+nav .in{display:flex;gap:8px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:10px 16px;scrollbar-width:none}
+nav .in::-webkit-scrollbar{display:none}
+nav a{flex:none;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;background:#fff;border:2px solid var(--c,#e2dcf5);border-radius:999px;padding:6px 12px;white-space:nowrap}
+main{max-width:1040px;margin:0 auto;padding:6px 16px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:16px}
+.hero{margin:8px 0 18px}
+.hero ol{margin:6px 0 10px;padding-left:22px}
+.hero .row{display:flex;gap:10px;flex-wrap:wrap}
+.hero .row .btn{flex:1;min-width:150px}
+/* group */
+section.grp{margin:26px 0}
+.band{background:var(--c);color:#fff;border-radius:22px;padding:14px 18px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}
+.band .em{font-size:40px;line-height:1;background:#fff;border-radius:16px;padding:8px}
+.band h2{margin:0;font-size:22px}
+.band .k{opacity:.9;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.band p{margin:4px 0 0;font-size:15px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+@media (min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.fc{border-top:8px solid var(--c);display:flex;flex-direction:column}
+.fc h3{margin:0 0 4px;font-size:19px;display:flex;gap:8px;align-items:center}
+.fc h3 .n{background:var(--c);color:#fff;border-radius:10px;padding:2px 8px;font-size:13px}
+.formula{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:clamp(21px,6vw,30px);text-align:center;background:#f6f2ff;border:3px dashed var(--c);border-radius:18px;padding:12px 8px;margin:8px 0;line-height:1.5;cursor:pointer;position:relative}
+.formula .line{display:block}
+.fig{display:block;width:100%;max-width:260px;margin:4px auto;height:auto}
+.it{display:flex;gap:8px;margin:6px 0;font-size:15.5px}
+.it>b:first-child{flex:none;width:24px;text-align:center}
+.it.fix{background:#ffe3ea;border:2px solid var(--red);border-radius:12px;padding:8px}
+.it.mem{background:#fff4d6;border-radius:12px;padding:8px}
+details{margin:6px 0;font-size:15px;background:#f3f0fa;border-radius:12px;padding:8px 10px}
+summary{cursor:pointer;font-weight:700}
+.grp .after{margin-top:14px;text-align:center}
+/* math */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+.fr>span:last-child{padding:0 4px}
+.rt{white-space:nowrap}
+.rt>span{border-top:2px solid currentColor;padding:0 2px;margin-left:1px}
+/* self-test: hide formulas */
+body.test .formula>*{visibility:hidden}
+body.test .formula::after{content:"👆 Скажи формулу вголос і торкнись";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 16px system-ui;color:var(--muted)}
+body.test .formula.show>*{visibility:visible}
+body.test .formula.show::after{content:none}
+.toggle{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;padding:10px 14px;font-size:15px;opacity:.95}
+/* pick table */
+table{width:100%;border-collapse:collapse;font-size:15.5px}
+td{padding:9px 8px;border-bottom:1px solid #eee;vertical-align:middle}
+td:first-child{width:55%}
+td .ans{font-weight:800;color:var(--c)}
+td a{text-decoration:none}
+/* links */
+.links{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:700px){.links{grid-template-columns:1fr 1fr}}
+.lk .ab{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:800}
+.lk .ab span{background:#f1e8ff;border-radius:10px;padding:4px 10px}
+.lk .ab i{font-style:normal;font-size:20px;color:var(--pink)}
+.lk p{margin:8px 0 0;font-size:15px}
+svg text{font-family:"Segoe UI",system-ui,sans-serif;font-weight:700;font-size:15px;fill:#2b2350}
+/* worked tasks */
+.task{border-top:8px solid var(--c);margin-top:14px}
+.task h3{margin:0 0 6px;font-size:19px;display:flex;gap:8px;align-items:center}
+.task h3 .n{background:var(--c);color:#fff;border-radius:10px;padding:2px 10px;font-size:14px}
+.tq{font-size:16.5px;font-weight:600;margin:4px 0 8px}
+.steps{margin:10px 0;padding-left:26px;font-size:16px}
+.steps li{margin:8px 0;display:none}
+.steps li.on{display:list-item;animation:pop .3s}
+.steps li::marker{font-weight:800;color:var(--c)}
+.ansbox{display:none;background:#d9fbf2;border:3px solid var(--green);border-radius:14px;padding:10px 12px;font-size:17px;margin:8px 0}
+.task.done .ansbox{display:block}
+.task.done .sbtn{display:none}
+.task:not(.done) .check{display:none}
+.sbtn{display:flex;gap:10px;margin-top:8px}
+.sbtn .btn{flex:1}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.foot{text-align:center;margin:30px 0 70px}
+main{padding-bottom:90px}
+</style>
+</head>
+<body>
+<header>
+  <a class="home" href="../" title="Усі ігри">🏠</a>
+  <h1>📖 <span class="acc">Теорія</span> · подібність і коло</h1>
+  <a class="btn" href="solutions.html">✍️ 26–30</a>
+  <a class="btn pink" href="./">🎮 Гра</a>
+</header>
+<nav><div class="in" id="nav"></div></nav>
+<main id="main"></main>
+<button class="btn toggle" id="toggle" onclick="toggleTest()">🙈 Перевір себе</button>
+<script>
+"use strict";
+/* ---------- math helpers ---------- */
+const fr = (n, d) => `<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const rt = x => `<span class="rt">√<span>${x}</span></span>`;
+const L = (...lines) => lines.map(l => `<span class="line">${l}</span>`).join("");
+
+/* ---------- svg helpers ---------- */
+const P = pts => pts.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
+const svg = (w, h, body) => `<svg class="fig" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
+const poly = (pts, fill = "#fff3c4", stroke = "#2b2350") => `<polygon points="${P(pts)}" fill="${fill}" stroke="${stroke}" stroke-width="3" stroke-linejoin="round"/>`;
+const ln = (a, b, col = "#2b2350", w = 3, dash = "") => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ""} stroke-linecap="round"/>`;
+const tx = (p, s, col = "#2b2350", size = 15) => `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle" style="fill:${col};font-size:${size}px">${s}</text>`;
+const cir = (c, r, col = "#8338ec", fill = "none", dash = "") => `<circle cx="${c[0]}" cy="${c[1]}" r="${r}" stroke="${col}" stroke-width="2.5" fill="${fill}" ${dash ? `stroke-dasharray="${dash}"` : ""}/>`;
+const dot = (p, col = "#2b2350") => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${col}"/>`;
+const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+function arc(v, a, b, r = 22, col = "#ff4f8b"){
+  const u = lerp(v, a, r / dist(v, a)), w = lerp(v, b, r / dist(v, b));
+  const cross = (a[0] - v[0]) * (b[1] - v[1]) - (a[1] - v[1]) * (b[0] - v[0]);
+  return `<path d="M${u[0].toFixed(1)},${u[1].toFixed(1)} A${r},${r} 0 0 ${cross > 0 ? 1 : 0} ${w[0].toFixed(1)},${w[1].toFixed(1)}" fill="none" stroke="${col}" stroke-width="3"/>`;
+}
+function square(v, a, b, s = 12){
+  const u = lerp(v, a, s / dist(v, a)), w = lerp(v, b, s / dist(v, b));
+  const c = [u[0] + w[0] - v[0], u[1] + w[1] - v[1]];
+  return `<polyline points="${P([u, c, w])}" fill="none" stroke="#2b2350" stroke-width="2"/>`;
+}
+function tick(a, b, n = 1, col = "#2b2350"){
+  const m = mid(a, b), d = dist(a, b), ux = (b[0] - a[0]) / d, uy = (b[1] - a[1]) / d;
+  let s = "";
+  for (let i = 0; i < n; i++) {
+    const off = (i - (n - 1) / 2) * 6, c = [m[0] + ux * off, m[1] + uy * off];
+    s += ln([c[0] - uy * 7, c[1] + ux * 7], [c[0] + uy * 7, c[1] - ux * 7], col, 2.5);
+  }
+  return s;
+}
+function incircle(A, B, C){
+  const a = dist(B, C), b = dist(C, A), c = dist(A, B), p = a + b + c;
+  const I = [(a * A[0] + b * B[0] + c * C[0]) / p, (a * A[1] + b * B[1] + c * C[1]) / p];
+  const s = Math.abs((B[0] - A[0]) * (C[1] - A[1]) - (C[0] - A[0]) * (B[1] - A[1])) / 2;
+  return [I, 2 * s / p];
+}
+function foot(P0, A, B){
+  const dx = B[0] - A[0], dy = B[1] - A[1], t = ((P0[0] - A[0]) * dx + (P0[1] - A[1]) * dy) / (dx * dx + dy * dy);
+  return [A[0] + t * dx, A[1] + t * dy];
+}
+const onC = (O, r, deg) => [O[0] + r * Math.cos(deg * Math.PI / 180), O[1] - r * Math.sin(deg * Math.PI / 180)];
+const lab = (O, p, s, col = "#2b2350", k = 1.2) => tx(lerp(O, p, k), s, col);
+function cross(a, b, c, d){
+  const den = (a[0] - b[0]) * (c[1] - d[1]) - (a[1] - b[1]) * (c[0] - d[0]);
+  const t = ((a[0] - c[0]) * (c[1] - d[1]) - (a[1] - c[1]) * (c[0] - d[0])) / den;
+  return lerp(a, b, t);
+}
+function hits(A, P0, O, r){
+  const L = dist(A, P0), u = [(P0[0] - A[0]) / L, (P0[1] - A[1]) / L], f = [A[0] - O[0], A[1] - O[1]];
+  const b = f[0] * u[0] + f[1] * u[1], disc = Math.sqrt(b * b - (f[0] * f[0] + f[1] * f[1] - r * r));
+  return [-b - disc, -b + disc].map(t => [A[0] + u[0] * t, A[1] + u[1] * t]);
+}
+function touch(A, O, r, side = 1){
+  const phi = Math.atan2(A[1] - O[1], A[0] - O[0]), al = Math.acos(r / dist(A, O)) * side;
+  return [O[0] + r * Math.cos(phi + al), O[1] + r * Math.sin(phi + al)];
+}
+function circum(A, B, C){
+  const d = 2 * (A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1]));
+  const s = p => p[0] * p[0] + p[1] * p[1];
+  const O = [(s(A) * (B[1] - C[1]) + s(B) * (C[1] - A[1]) + s(C) * (A[1] - B[1])) / d, (s(A) * (C[0] - B[0]) + s(B) * (A[0] - C[0]) + s(C) * (B[0] - A[0])) / d];
+  return [O, dist(O, A)];
+}
+const fillC = (O, r) => cir(O, r, "#8338ec", "#f6f2ff");
+
+/* ---------- figures ---------- */
+const FIG = {};
+const CO = [120, 90], CR = 70;
+FIG.chords = () => { const A = onC(CO, CR, 165), B = onC(CO, CR, -20), C = onC(CO, CR, 215), D = onC(CO, CR, 70), M = cross(A, B, C, D);
+  return svg(240, 180, fillC(CO, CR) + ln(A, B, "#3a86ff", 4) + ln(C, D, "#ff4f8b", 4) + [A, B, C, D].map(p => dot(p)).join("") + dot(M, "#8338ec")
+    + lab(CO, A, "A") + lab(CO, B, "B") + lab(CO, C, "C") + lab(CO, D, "D") + tx([M[0] + 4, M[1] + 16], "M", "#8338ec")); };
+FIG.simChord = () => { const A = onC(CO, CR, 165), B = onC(CO, CR, -20), C = onC(CO, CR, 215), D = onC(CO, CR, 70), M = cross(A, B, C, D);
+  return svg(240, 180, fillC(CO, CR) + poly([A, M, C], "#d9fbf2", "#2ec4b6") + poly([D, M, B], "#ffe3f1", "#ff4f8b") + ln(A, B, "#2b2350", 3) + ln(C, D, "#2b2350", 3)
+    + arc(A, M, C, 18, "#ff9f1c") + arc(D, M, B, 18, "#ff9f1c")
+    + lab(CO, A, "A") + lab(CO, B, "B") + lab(CO, C, "C") + lab(CO, D, "D") + tx([M[0] + 4, M[1] + 16], "M", "#8338ec")); };
+FIG.chordR = () => { const A = onC(CO, CR, 150), B = onC(CO, CR, 30), M = lerp(A, B, 0.35), u = [(M[0] - CO[0]) / dist(M, CO), (M[1] - CO[1]) / dist(M, CO)];
+  const D = [CO[0] + u[0] * CR, CO[1] + u[1] * CR], C = [CO[0] - u[0] * CR, CO[1] - u[1] * CR];
+  return svg(240, 200, fillC(CO, CR) + ln(C, D, "#2ec4b6", 3, "7 5") + ln(A, B, "#3a86ff", 4) + ln(CO, M, "#ff4f8b", 4)
+    + [A, B, C, D].map(p => dot(p)).join("") + dot(CO, "#8338ec") + dot(M, "#ff4f8b")
+    + lab(CO, A, "A") + lab(CO, B, "B") + lab(CO, C, "C", "#2ec4b6") + lab(CO, D, "D", "#2ec4b6") + tx([CO[0] + 12, CO[1] + 10], "O", "#8338ec")
+    + tx([M[0] - 14, M[1] + 14], "M", "#ff4f8b") + tx([(CO[0] + M[0]) / 2 + 12, (CO[1] + M[1]) / 2 + 2], "d", "#ff4f8b")
+    + tx([120, 188], "MC = R − d,   MD = R + d", "#2ec4b6", 14)); };
+const SA = [16, 110], SO = [168, 92], SR = 60;
+FIG.secants = () => { const [B, C] = hits(SA, [SO[0], SO[1] - 28], SO, SR), [D, E] = hits(SA, [SO[0], SO[1] + 30], SO, SR);
+  return svg(240, 170, fillC(SO, SR) + ln(SA, lerp(SA, C, 1.08), "#3a86ff", 3.5) + ln(SA, lerp(SA, E, 1.08), "#ff4f8b", 3.5)
+    + [B, C, D, E].map(p => dot(p)).join("") + dot(SA) + tx([SA[0], SA[1] - 14], "A")
+    + tx([B[0] - 4, B[1] - 14], "B", "#3a86ff") + tx([C[0] + 4, C[1] - 14], "C", "#3a86ff") + tx([D[0] - 2, D[1] + 16], "D", "#ff4f8b") + tx([E[0] + 6, E[1] + 16], "E", "#ff4f8b")); };
+FIG.tangent = () => { const A = [16, 136], O = [165, 82], r = 60, B = touch(A, O, r, 1), [C, D] = hits(A, [O[0], O[1] + 18], O, r);
+  return svg(240, 160, fillC(O, r) + ln(O, B, "#8338ec", 2.5, "5 4") + square(B, A, O, 10) + ln(A, lerp(A, B, 1.15), "#ff4f8b", 4) + ln(A, lerp(A, D, 1.06), "#3a86ff", 3.5)
+    + [B, C, D].map(p => dot(p)).join("") + dot(A) + dot(O, "#8338ec") + tx([A[0] + 4, A[1] + 13], "A")
+    + tx([B[0] - 16, B[1] + 4], "B", "#ff4f8b") + tx([C[0] - 2, C[1] + 16], "C", "#3a86ff") + tx([D[0] + 6, D[1] + 16], "D", "#3a86ff")); };
+FIG.bis = () => { const A = [25, 135], B = [110, 25], C = [215, 135], D = lerp(B, C, 0.4225);
+  return svg(240, 160, poly([A, B, C]) + ln(A, D, "#ff9f1c", 3.5) + arc(A, B, D, 26, "#2ec4b6") + arc(A, D, C, 32, "#2ec4b6")
+    + tx([20, 150], "A") + tx([110, 12], "B") + tx([225, 150], "C") + tx([D[0] + 12, D[1] - 6], "D", "#ff9f1c")); };
+FIG.inscribed = () => { const A = onC(CO, CR, 205), B = onC(CO, CR, -25), C = onC(CO, CR, 105);
+  return svg(240, 186, `<g transform="translate(0,6)">` + fillC(CO, CR) + `<path d="M${A[0].toFixed(1)},${A[1].toFixed(1)} A${CR},${CR} 0 0 0 ${B[0].toFixed(1)},${B[1].toFixed(1)}" fill="none" stroke="#ff9f1c" stroke-width="7"/>`
+    + ln(C, A, "#ff4f8b", 3) + ln(C, B, "#ff4f8b", 3) + ln(CO, A, "#3a86ff", 2.5, "5 4") + ln(CO, B, "#3a86ff", 2.5, "5 4")
+    + arc(C, A, B, 22, "#ff4f8b") + arc(CO, A, B, 16, "#3a86ff") + [A, B, C].map(p => dot(p)).join("") + dot(CO, "#8338ec")
+    + lab(CO, A, "A") + lab(CO, B, "B") + lab(CO, C, "C") + tx([C[0] + 2, C[1] + 34], "α", "#ff4f8b", 16) + tx([CO[0], CO[1] + 30], "2α", "#3a86ff", 15) + `</g>`); };
+FIG.diam = () => { const A = onC(CO, CR, 180), B = onC(CO, CR, 0), C = onC(CO, CR, 60);
+  return svg(240, 182, fillC(CO, CR) + ln(A, B, "#2ec4b6", 4) + poly([A, B, C], "none", "#ff4f8b") + square(C, A, B, 11) + dot(CO, "#8338ec")
+    + lab(CO, A, "A") + lab(CO, B, "B") + lab(CO, C, "C") + tx([CO[0], CO[1] + 14], "O", "#8338ec") + tx([CO[0], 174], "AB — діаметр", "#2ec4b6", 13)); };
+
+/* last five */
+FIG.s27 = () => { const O = [160, 95], r = 50, K = [O[0] - 2 * r, 95], B = [O[0] - r, 95], C = [O[0] + r, 95], A = onC(O, r, 120);
+  return svg(240, 160, fillC(O, r) + ln(K, C, "#3a86ff", 3) + ln(K, A, "#ff4f8b", 4) + ln(O, A, "#8338ec", 2.5, "5 4") + square(A, K, O, 9) + ln(A, C, "#2ec4b6", 3.5)
+    + arc(A, K, C, 16, "#ff9f1c") + arc(K, A, C, 26, "#2b2350") + [K, A, B, C].map(p => dot(p)).join("") + dot(O, "#8338ec")
+    + tx([K[0] - 4, K[1] + 16], "K") + tx([A[0] - 6, A[1] - 14], "A") + tx([B[0] - 6, B[1] + 16], "B") + tx([C[0] + 10, C[1] + 14], "C") + tx([O[0], O[1] + 16], "O", "#8338ec")
+    + tx([(K[0] + B[0]) / 2, 82], "1", "#3a86ff") + tx([K[0] + 18, 64], "√3", "#ff4f8b") + tx([K[0] + 40, 88], "30°", "#2b2350", 12)); };
+FIG.s28 = () => { const B = [20, 150], C = [190, 150], A = [190 + 120 * Math.cos(110 * Math.PI / 180), 150 - 120 * Math.sin(110 * Math.PI / 180)], M = mid(B, C);
+  const [O, R] = circum(A, B, C), D = hits(A, M, O, R)[1];
+  return svg(240, 230, cir(O, R, "#8338ec", "#f6f2ff") + poly([A, B, C]) + ln(A, D, "#ff4f8b", 3) + ln(D, C, "#2ec4b6", 4) + ln(A, C, "#2ec4b6", 4) + tick(B, M) + tick(M, C)
+    + [A, B, C, D, M].map(p => dot(p)).join("") + tx([A[0], A[1] - 14], "A") + tx([B[0] - 10, B[1] + 6], "B") + tx([C[0] + 12, C[1] + 4], "C")
+    + tx([M[0] - 10, M[1] - 10], "M", "#ff4f8b") + tx([D[0], D[1] + 16], "D", "#ff4f8b") + tx([C[0] + 8, (A[1] + C[1]) / 2 - 6], "1", "#2ec4b6") + tx([(C[0] + D[0]) / 2 + 12, (C[1] + D[1]) / 2 + 6], "1", "#2ec4b6")); };
+FIG.s29 = () => { const A = [70, 170], B = [158, 170], C = [114, 46], O = mid(A, C), M = mid(A, B), N = lerp(B, C, 2 / 9);
+  return svg(240, 200, cir(O, dist(O, A), "#8338ec", "#f6f2ff") + poly([A, B, C]) + ln(C, M, "#2b2350", 2, "5 4") + ln(A, N, "#2ec4b6", 2.5, "5 4") + ln(M, N, "#ff4f8b", 4)
+    + square(M, B, C, 9) + square(N, A, C, 9) + [A, B, C, M, N].map(p => dot(p)).join("")
+    + tx([A[0] - 10, A[1] + 12], "A") + tx([B[0] + 10, B[1] + 12], "B") + tx([C[0], C[1] - 14], "C") + tx([M[0], M[1] + 16], "M") + tx([N[0] + 14, N[1] + 2], "N", "#ff4f8b")
+    + tx([A[0] + 2, 100], "6", "#8338ec")); };
+FIG.s30 = () => { const B = [120, 14], A = [70.6, 166], C = [169.4, 166], D = lerp(B, C, 0.618);
+  return svg(240, 194, poly([A, B, C]) + ln(A, D, "#ff9f1c", 4) + arc(B, A, C, 26, "#ff4f8b") + arc(A, D, B, 22, "#2ec4b6") + arc(A, C, D, 28, "#2ec4b6") + arc(C, A, B, 18, "#3a86ff")
+    + tx([B[0], B[1] - 2 + 44], "36°", "#ff4f8b", 12) + tx([B[0] + 14, B[1] + 4], "B") + tx([A[0] - 10, A[1] + 10], "A") + tx([C[0] + 10, C[1] + 10], "C") + tx([D[0] + 12, D[1]], "D", "#ff9f1c")
+    + tx([C[0] - 12, C[1] - 32], "72°", "#3a86ff", 12) + tx([B[0], 184], "AB = BC = ?", "#2b2350", 13)); };
+
+/* ---------- content ---------- */
+const LEVELS = [
+ { id: "chords", name: "Хорди", em: "🔵", c: "#3a86ff",
+   intro: "Дві хорди перетинаються всередині кола. Точка перетину ділить кожну хорду на два шматки.",
+   slides: [
+    { f: "chord", t: "Хорди, що перетинаються", fig: "chords",
+      fm: L("AM · MB = CM · MD"),
+      mem: "Шматок × шматок однієї хорди = шматок × шматок іншої. Множимо шматки ОДНІЄЇ хорди між собою.",
+      use: "Дві хорди перетинаються. Відомі три шматки — шукаємо четвертий." },
+    { f: "chordR", t: "Хорда і радіус", fig: "chordR",
+      fm: L("MA · MB = R² − d²"),
+      mem: "Проведи через M діаметр. Його шматки: R − d і R + d. Добуток (R − d)(R + d) = R² − d².",
+      use: "Дано радіус R і відстань d від точки до центру." } ],
+   quiz: [
+    { f: "chord", q: "Хорди AB і CD перетинаються в M. AM = 3, MB = 8, CM = 6. Знайди MD.", o: ["4", "2", "5", "6"], e: "3 · 8 = 6 · MD → 24 = 6 · MD → MD = 4." },
+    { f: "chord", q: "Яка рівність правильна для хорд AB і CD, що перетинаються в M?", o: ["AM · MB = CM · MD", "AM · CM = MB · MD", "AM + MB = CM + MD", "AM · MD = CM · MB"], e: "Множимо два шматки однієї хорди (AM · MB) і два шматки іншої (CM · MD)." },
+    { f: "chord", q: "Одна хорда ділиться на 6 см і 16 см, друга — у відношенні 3 : 2. Довжина другої хорди?", o: ["20 см", "16 см", "22 см", "12 см"], e: "6 · 16 = 96. Шматки 3k і 2k: 6k² = 96 → k = 4. Хорда = 5k = 20." },
+    { f: "chord", q: "MF = 9, KF = 12, а NF у 3 рази довший за PF. Знайди хорду NP.", o: ["24", "18", "20", "22"], e: "9 · 12 = 108 = 3x · x → x² = 36 → x = 6. NP = 6 + 18 = 24." },
+    { f: "chordR", q: "Точка E ділить хорду на 15 і 16. Відстань від E до центру 4. Радіус = ?", o: ["16", "15", "18", "19"], e: "15 · 16 = R² − 4² → 240 = R² − 16 → R² = 256 → R = 16." },
+    { f: "chordR", q: "R = 11. Точка P на відстані 5 від центру ділить хорду AB як 2 : 3. AB = ?", o: ["20", "12", "18", "22"], e: "2k · 3k = 121 − 25 = 96 → k² = 16 → k = 4. AB = 5k = 20." } ] },
+
+ { id: "secant", name: "Січні і дотична", em: "✂️", c: "#ff4f8b",
+   intro: "Точка A лежить ПОЗА колом. З неї йдуть січні (перетинають коло двічі) або дотична (торкається один раз).",
+   slides: [
+    { f: "sec", t: "Дві січні", fig: "secants",
+      fm: L("AB · AC = AD · AE"),
+      mem: "«Зовнішня частина × ВСЯ січна» — однаково для кожної січної. Усе рахуємо від точки A.",
+      use: "З однієї точки дві січні, відомі три відрізки.",
+      fix: "Часта помилка: множити зовнішню частину на внутрішню. Треба на ВСЮ січну: AC = AB + BC." },
+    { f: "tan", t: "Дотична і січна", fig: "tangent",
+      fm: L("AB² = AC · AD"),
+      mem: "Дотична — це січна, у якої дві точки злилися в одну: AB · AB = AB².",
+      use: "З точки проведено дотичну і січну." } ],
+   quiz: [
+    { f: "sec", q: "AB = 3, BC = 5, AD = 4 (дві січні з точки A). Знайди DE.", o: ["2", "1", "3", "4"], e: "AC = 3 + 5 = 8. 3 · 8 = 4 · AE → AE = 6 → DE = 6 − 4 = 2." },
+    { f: "sec", q: "Для двох січних з точки A правильно:", o: ["AB · AC = AD · AE", "AB · BC = AD · DE", "AB · AD = AC · AE", "AB + AC = AD + AE"], e: "Зовнішня частина × вся січна: AB · AC = AD · AE." },
+    { f: "tan", q: "AC = 4, CD = 12. Знайди дотичну AB.", o: ["8", "4√3", "16", "12"], e: "AD = 4 + 12 = 16. AB² = 4 · 16 = 64 → AB = 8." },
+    { f: "tan", q: "Січна: AB = 4 см, BC = 5 см. Довжина дотичної з точки A?", o: ["6 см", "8 см", "9 см", "36 см"], e: "Уся січна AC = 9. t² = 4 · 9 = 36 → t = 6." },
+    { f: "tan", q: "Внутрішня частина січної 9 см, зовнішня на 7 см більша. Дотична = ?", o: ["20 см", "12 см", "16 см", "22 см"], e: "Зовнішня 16, уся січна 25. t² = 16 · 25 = 400 → t = 20." },
+    { f: "tan", q: "Дотична AM = 12, січна AP = 18 (K між A і P). Знайди KP.", o: ["10", "8", "12", "14"], e: "144 = AK · 18 → AK = 8. KP = 18 − 8 = 10." },
+    { f: "tan", q: "Дотична AB = 18, AC : CD = 4 : 5. Знайди AD.", o: ["27", "12", "15", "26"], e: "AC = 4k, AD = 9k. 324 = 4k · 9k = 36k² → k = 3 → AD = 27." } ] },
+
+ { id: "bis", name: "Бісектриса", em: "📐", c: "#ff9f1c",
+   intro: "Бісектриса ділить кут навпіл. А протилежну сторону вона ділить на два шматки.",
+   slides: [
+    { f: "bis1", t: "Бісектриса ділить сторону", fig: "bis",
+      fm: L(`${fr("BD", "DC")} = ${fr("AB", "AC")}`),
+      mem: "Кожен шматок «дружить» зі своєю сусідньою стороною: BD — з AB, DC — з AC. Більша сторона — більший шматок.",
+      use: "Є бісектриса. Треба знайти шматки сторони або самі сторони." },
+    { f: "bis2", t: "Довжина бісектриси", fig: "bis",
+      fm: L("AD² = AB · AC − BD · DC"),
+      mem: "«Добуток сторін мінус добуток шматків».",
+      use: "Відомі сторони і шматки. Треба саму бісектрису." } ],
+   quiz: [
+    { f: "bis1", q: "AC на 6 см більша за AB. Бісектриса кута A ділить BC на 5 см і 10 см. Периметр?", o: ["33 см", "27 см", "32 см", "28 см"], e: "AB : AC = 5 : 10 = 1 : 2. AC = 2AB і AC − AB = 6 → AB = 6, AC = 12. P = 6 + 12 + 15 = 33." },
+    { f: "bis1", q: "Яка пропорція правильна для бісектриси AD?", o: [`${fr("BD", "DC")} = ${fr("AB", "AC")}`, `${fr("BD", "DC")} = ${fr("AC", "AB")}`, `${fr("BD", "AB")} = ${fr("AC", "DC")}`, "BD = DC"], e: "Шматок дружить зі своєю сусідньою стороною: BD з AB, DC з AC." },
+    { f: "bis1", q: "Сторони 6, 18, 20. Бісектриса найбільшого кута ділить сторону 20. Більший шматок = ?", o: ["15", "10", "12", "14"], e: "Найбільший кут — навпроти 20. Шматки як 6 : 18 = 1 : 3 → 5 і 15." },
+    { f: "bis2", q: "AB = 6, AC = 12, BD = 5, DC = 10. Бісектриса AD = ?", o: ["√22", "2√5", "2√6", "22"], e: "AD² = 6 · 12 − 5 · 10 = 72 − 50 = 22 → AD = √22." },
+    { f: "bis2", q: "BC = 18, AC = 15, AB = 12. Бісектриса до сторони BC = ?", o: ["10", "8", "9", "12"], e: "BD : DC = 12 : 15 → BD = 8, DC = 10. AD² = 180 − 80 = 100 → AD = 10." },
+    { f: "bis2", q: "Сторони 4, 8, 9. Квадрат бісектриси до сторони 9 = ?", o: ["14", "18", "32", "8"], e: "Сторону 9 ділимо як 4 : 8 = 1 : 2 → 3 і 6. l² = 4 · 8 − 3 · 6 = 32 − 18 = 14." } ] },
+
+ { id: "angles", name: "Кути в колі і подібність", em: "🔁", c: "#2ec4b6",
+   intro: "Звідки беруться всі ці формули? З подібних трикутників. А подібність — з рівних кутів у колі.",
+   slides: [
+    { f: "insc", t: "Вписаний кут", fig: "inscribed",
+      fm: L(`∠ACB = ${fr("1", "2")} дуги AB`),
+      mem: "Вписаний кут — ПОЛОВИНА дуги (і половина центрального кута). Кути, що спираються на одну дугу, рівні.",
+      use: "Шукаєш рівні кути, щоб довести подібність." },
+    { f: "diam", t: "Кут, що спирається на діаметр", fig: "diam",
+      fm: L("∠ACB = 90°"),
+      mem: "Діаметр — це дуга 180°. Половина — 90°.",
+      use: "У задачі коло побудоване на стороні як на діаметрі." },
+    { f: "simc", t: "Подібність → добуток", fig: "simChord",
+      fm: L(`${fr("AM", "DM")} = ${fr("CM", "BM")}`, "AM · BM = CM · DM"),
+      mem: "Два рівні кути → трикутники подібні → пропорція → множимо «навхрест».",
+      use: "Задача, де готової формули немає (як 28* і 29*)." } ],
+   quiz: [
+    { f: "insc", q: "Вписаний кут дорівнює…", o: ["половині дуги, на яку спирається", "дузі, на яку спирається", "подвоєній дузі", "завжди 90°"], e: "Вписаний = ½ дуги. Центральний = дузі." },
+    { f: "insc", q: "Дуга AB = 140°. Вписаний кут ACB = ?", o: ["70°", "140°", "280°", "40°"], e: "Половина дуги: 140° : 2 = 70°." },
+    { f: "diam", q: "Вписаний кут спирається на діаметр. Він дорівнює…", o: ["90°", "180°", "45°", "60°"], e: "Дуга 180°, половина — 90°." },
+    { f: "simc", q: "Хорди AB і CD перетинаються в M. Чому △AMC ∼ △DMB?", o: ["∠A = ∠D (одна дуга) і вертикальні кути при M", "Усі сторони рівні", "Обидва прямокутні", "Бо AB = CD"], e: "Два рівні кути — і трикутники подібні." },
+    { f: "simc", q: "Яке твердження правильне?", o: ["Якщо з'єднати кінці двох хорд, що перетинаються, вийдуть два подібні трикутники", "Бісектриса ділить трикутник на два подібні трикутники", "Квадрат дотичної = зовнішня × внутрішня частина січної", "Вписаний кут дорівнює дузі"], e: "Це твердження 2) із задачі 7. Пастки: дотична² = зовнішня × ВСЯ січна; вписаний кут = ½ дуги." } ] }
+];
+
+const FORMULAS = [];
+LEVELS.forEach((l, li) => l.slides.forEach(s => { if (!FORMULAS.find(f => f.f === s.f)) { FORMULAS.push({ f: s.f, t: s.t, fm: s.fm, li }); } }));
+
+const EXTRA = {
+  chord:  { lg: "M — точка перетину; AM, MB — шматки хорди AB; CM, MD — шматки хорди CD.", why: "△AMC ∼ △DMB: кути A і D спираються на одну дугу. З пропорції AM : DM = CM : BM виходить добуток.", ex: "AM = 3, MB = 8, CM = 6: 3 · 8 = 6 · x → x = 4." },
+  chordR: { lg: "R — радіус; d = OM — відстань від точки M до центру O.", why: "Це та сама теорема про хорди. Друга хорда — діаметр: (R − d)(R + d).", ex: "R = 11, d = 5: MA · MB = 121 − 25 = 96." },
+  sec:    { lg: "A — точка поза колом; AB, AD — зовнішні частини; AC, AE — цілі січні.", why: "△ABE ∼ △ADC: спільний кут A, а кути C і E спираються на одну дугу.", ex: "AB = 3, BC = 5 → AC = 8. AD = 4: 3 · 8 = 4 · AE → AE = 6 → DE = 2." },
+  tan:    { lg: "AB — дотична (B — точка дотику); AC — зовнішня частина січної; AD — уся січна.", why: "△ABC ∼ △ADB: спільний кут A, а кут між дотичною і хордою дорівнює вписаному куту.", ex: "AC = 4, CD = 12 → AD = 16. AB² = 4 · 16 = 64 → AB = 8." },
+  bis1:   { lg: "AD — бісектриса кута A; BD, DC — шматки сторони BC.", why: "Довша сторона «тягне» до себе довший шматок.", ex: "AB = 12, AC = 15, BC = 18: BD : DC = 4 : 5 → BD = 8, DC = 10." },
+  bis2:   { lg: "AD — бісектриса; AB, AC — сторони кута; BD, DC — шматки.", why: "Продовж AD до описаного кола. Подібність і теорема про хорди дають цю формулу.", ex: "AB = 12, AC = 15, BD = 8, DC = 10: AD² = 180 − 80 = 100 → AD = 10." },
+  insc:   { lg: "O — центр; ∠AOB — центральний кут; ∠ACB — вписаний (вершина на колі).", why: "Центральний кут = дузі. Вписаний вдвічі менший.", ex: "Дуга AB = 100° → ∠ACB = 50°." },
+  diam:   { lg: "AB — діаметр; C — будь-яка точка кола.", why: "Дуга під діаметром 180°, вписаний кут — половина.", ex: "Коло на AC як на діаметрі проходить через M → ∠AMC = 90°." },
+  simc:   { lg: "Зафарбовані △AMC і △DMB — подібні.", why: "∠A = ∠D (спираються на дугу CB), ∠AMC = ∠DMB (вертикальні).", ex: "AM : DM = CM : BM → AM · BM = CM · DM. Це і є теорема про хорди." }
+};
+LEVELS.forEach(l => l.slides.forEach(s => Object.assign(s, EXTRA[s.f] || {})));
+
+const LINKS = [
+  { a: "AM · MB = CM · MD", b: "MA · MB = R² − d²", how: "Візьми другою хордою діаметр. Його шматки R − d і R + d." },
+  { a: "Дві січні", b: "Дотична і січна", how: "Поверни січну, поки дві точки не зіллються в одну: AB · AB = AB²." },
+  { a: "Усі добутки", b: "Подібні трикутники", how: "Кожна формула — це пропорція з подібних трикутників, перемножена «навхрест»." },
+  { a: "AD² = AB · AC − BD · DC", b: "Хорди", how: "Продовж бісектрису до описаного кола, і там працює теорема про хорди." }
+];
+
+const PICK = [
+  ["Дві хорди перетинаються всередині кола", "AM · MB = CM · MD", "chords"],
+  ["Є радіус R і відстань d від точки до центру", "MA · MB = R² − d²", "chords"],
+  ["З точки ПОЗА колом — дві січні", "AB · AC = AD · AE", "secant"],
+  ["З точки поза колом — дотична і січна", "AB² = AC · AD", "secant"],
+  ["Є бісектриса, треба шматки сторони або сторони", "BD : DC = AB : AC", "bis"],
+  ["Є бісектриса, треба її довжину", "AD² = AB · AC − BD · DC", "bis"],
+  ["Коло побудоване на стороні як на діаметрі", "кут 90°", "angles"],
+  ["Готової формули немає", "шукай рівні кути → подібні трикутники", "angles"]
+];
+
+/* ---------- worked problems ---------- */
+const TYPICAL = [
+  { n: "№ 1", c: "#3a86ff", fig: "chords", q: "Хорди AB і CD перетинаються в точці M. AM = 3, MB = 8, CM = 6. Знайди MD = x.",
+    steps: ["Дві хорди перетинаються → AM · MB = CM · MD.", "3 · 8 = 6 · x → 24 = 6x.", "x = 24 : 6 = 4."], ans: "x = 4 (Б)" },
+  { n: "№ 6", c: "#3a86ff", fig: "chords", q: "Одна хорда ділиться на 6 см і 16 см. Друга — у відношенні 3 : 2. Знайди довжину другої хорди.",
+    steps: ["Відношення 3 : 2 → шматки 3k і 2k (k — одна «частинка»).", "Теорема про хорди: 6 · 16 = 3k · 2k → 96 = 6k².", "k² = 16 → k = 4. Шматки 12 і 8.", "Хорда = 12 + 8 = 20 см."], ans: "20 см (Г)" },
+  { n: "№ 12", c: "#3a86ff", fig: "chords", q: "CM = 4, MD = 9, x + y = 15, де x = AM, y = BM, і BM > AM. Знайди y.",
+    steps: ["Хорди: x · y = 4 · 9 = 36.", "Шукаємо два числа: сума 15, добуток 36. Це 3 і 12 (3 + 12 = 15, 3 · 12 = 36).", "BM більше → y = 12."], ans: "y = 12 (Г)" },
+  { n: "№ 3", c: "#ff4f8b", fig: "secants", q: "З точки A проведено січні AC і AE. AB = 3, BC = 5, AD = 4. Знайди DE.",
+    steps: ["Дві січні → AB · AC = AD · AE (зовнішня × ВСЯ).", "AC = 3 + 5 = 8. Нехай DE = x, тоді AE = 4 + x.", "3 · 8 = 4 · (4 + x) → 24 = 16 + 4x → x = 2."], ans: "DE = 2 (А)" },
+  { n: "№ 11", c: "#ff4f8b", fig: "tangent", q: "З точки проведено дотичну і січну. Внутрішня частина січної 9 см, зовнішня на 7 см більша. Знайди дотичну.",
+    steps: ["Зовнішня частина: 9 + 7 = 16. Уся січна: 16 + 9 = 25.", "Дотична² = зовнішня × вся: t² = 16 · 25 = 400.", "t = 20 см."], ans: "20 см (А)" },
+  { n: "№ 20", c: "#3a86ff", fig: "chordR", q: "Точка E ділить хорду CD на 15 см і 16 см. Відстань від E до центру 4 см. Знайди радіус.",
+    steps: ["Формула: шматок · шматок = R² − d².", "15 · 16 = R² − 4² → 240 = R² − 16.", "R² = 256 → R = 16 см."], ans: "16 см (Б)" },
+  { n: "№ 13–14", c: "#ff9f1c", fig: "bis", q: "AC на 6 см більша за AB. Бісектриса кута A ділить BC на 5 см і 10 см. Знайди периметр і бісектрису.",
+    steps: ["Властивість бісектриси: AB : AC = BD : DC = 5 : 10 = 1 : 2 → AC = 2 · AB.", "AC − AB = 6 → 2AB − AB = 6 → AB = 6, AC = 12.", "Периметр: 6 + 12 + 15 = 33 см.", "Бісектриса: AD² = AB · AC − BD · DC = 72 − 50 = 22 → AD = √22 см."], ans: "P = 33 см (В), AD = √22 см (В)" }
+];
+
+const SOLVED = [
+  { n: "26", fig: "chordR", q: "На хорді AB позначено точку M. Доведіть, що MA · MB = R² − d², де R — радіус кола, d — відстань від точки M до центра кола.",
+    idea: "Провести через M діаметр. Тоді працює теорема про хорди.",
+    steps: ["Проведемо через точку M діаметр CD. Центр O лежить на ньому, OM = d.",
+      "Знайдемо шматки діаметра: MC = OC − OM = R − d, MD = OD + OM = R + d.",
+      "AB і CD — хорди, що перетинаються в точці M. Тому MA · MB = MC · MD.",
+      "MC · MD = (R − d)(R + d) = R² − d² (різниця квадратів).",
+      "Отже MA · MB = R² − d². Що й треба було довести."],
+    ans: "Доведено ✔", check: "Перевірка: якщо M — центр (d = 0), то MA · MB = R · R = R². Так і є." },
+  { n: "27", fig: "s27", q: "Через точку K поза колом проведено дві прямі. Одна дотикається до кола в точці A, друга проходить через центр і перетинає коло в точках B і C (KB < KC). KB = 1 см, KA = √3 см. Знайдіть кут KAC.",
+    idea: "Дотична² = зовнішня × вся січна. Потім прямокутний трикутник з радіусом.",
+    steps: ["Дотична і січна з точки K: KA² = KB · KC.",
+      "(√3)² = 1 · KC → KC = 3.",
+      "BC = KC − KB = 3 − 1 = 2. BC — діаметр (пряма йде через центр), тому R = 1. KO = KB + BO = 1 + 1 = 2.",
+      "Радіус до точки дотику ⊥ дотичній: ∠OAK = 90°. У △KAO катет OA = 1, гіпотенуза KO = 2. Катет = половина гіпотенузи → ∠AKO = 30°.",
+      "∠AOK = 90° − 30° = 60°. Тоді ∠AOC = 180° − 60° = 120°.",
+      "△AOC рівнобедрений (OA = OC = R): ∠OAC = (180° − 120°) : 2 = 30°.",
+      "∠KAC = ∠KAO + ∠OAC = 90° + 30° = 120°."],
+    ans: "∠KAC = 120°", check: "Перевірка: у △KAC ∠K = 30°, ∠C = 30°, ∠A = 120°. Сума 180° ✔" },
+  { n: "28", fig: "s28", q: "Продовження медіани AM трикутника ABC перетинає коло, описане навколо нього, в точці D. Відомо, що AC = DC = 1 см. Знайдіть сторону BC.",
+    idea: "Знайти рівні кути → подібні трикутники CAM і CBA.",
+    steps: ["AC = DC → △ACD рівнобедрений → ∠CAD = ∠CDA.",
+      "∠CDA = ∠CBA: обидва вписані і спираються на одну дугу AC.",
+      "Отже ∠CAM = ∠CBA. Кут C у △CAM і △CBA спільний. Тому △CAM ∼ △CBA (за двома кутами).",
+      "Пропорція: CA : CB = CM : CA → CA² = CB · CM.",
+      "M — середина BC → CM = BC : 2. Тоді 1 = BC · BC : 2 → BC² = 2.",
+      "BC = √2 см."],
+    ans: "BC = √2 см", check: "Перевірка: CA² = 1 і CB · CM = √2 · (√2 : 2) = 1 ✔" },
+  { n: "29", fig: "s29", q: "Коло, побудоване на стороні AC трикутника ABC як на діаметрі, проходить через середину M сторони AB і перетинає сторону BC у точці N так, що BN : NC = 2 : 7. Знайдіть MN, якщо AC = 6 см.",
+    idea: "Кут, що спирається на діаметр, = 90°. Медіана до гіпотенузи = половина гіпотенузи.",
+    steps: ["AC — діаметр, M на колі → ∠AMC = 90°. Отже CM ⊥ AB.",
+      "CM — і висота, і медіана (M — середина AB). Тому △ABC рівнобедрений: CB = CA = 6 см.",
+      "BN : NC = 2 : 7 і BC = 6 → BN = 6 · 2 : 9 = 4/3, NC = 14/3.",
+      "З точки B дві січні: BM · BA = BN · BC. Нехай BM = x, тоді BA = 2x: x · 2x = 4/3 · 6 = 8 → x² = 4 → x = 2. AB = 4.",
+      "N теж на колі → ∠ANC = 90°. Отже △ANB прямокутний з гіпотенузою AB, а NM — медіана до неї.",
+      "Медіана до гіпотенузи = половина гіпотенузи: MN = AB : 2 = 4 : 2 = 2 см."],
+    ans: "MN = 2 см", check: "Інший шлях: △BMN ∼ △BCA, бо BM · BA = BN · BC. MN : CA = BM : BC = 2 : 6 → MN = 2 ✔" },
+  { n: "30", fig: "s30", q: "У рівнобедреному трикутнику кут при вершині дорівнює 36°, а бісектриса кута при основі дорівнює 2(√5 − 1). Обчисліть довжину бічної сторони.",
+    idea: "Бісектриса відрізає трикутник, подібний до всього трикутника.",
+    steps: ["Нехай AB = BC = b (бічні), AC = a (основа), ∠B = 36°. Кути при основі: (180° − 36°) : 2 = 72°.",
+      "Бісектриса AD ділить ∠A = 72° на 36° і 36°.",
+      "△ABD: ∠DAB = 36° = ∠B → рівнобедрений: AD = BD.",
+      "△ADC: ∠DAC = 36°, ∠C = 72° → ∠ADC = 72° → рівнобедрений: AD = AC. Отже AC = AD = BD = a = 2(√5 − 1).",
+      "△ADC ∼ △BAC (кути 36°, 72°, 72°). Пропорція: DC : AC = AC : BC → (b − a) : a = a : b → b² − ab − a² = 0.",
+      "Розв'яжемо відносно b: b = a(1 + √5) : 2 = 2(√5 − 1)(√5 + 1) : 2 = 5 − 1 = 4."],
+    ans: "Бічна сторона = 4 см", check: "⚠️ У відповідях у кінці книжки написано 4,5 см. Ми перевірили: правильно 4 см. Основа при бічній 4 і куті 36°: 2 · 4 · sin 18° ≈ 2,47. І 2(√5 − 1) ≈ 2,47 ✔" }
+];
+
+function stepCard(p, id){
+  return `<div class="card task" id="${id}" style="--c:${p.c || "#8338ec"}">
+    <h3><span class="n">${p.n}</span>${p.idea ? "Задача" : "Типова задача"}</h3>
+    <p class="tq">${p.q}</p>
+    ${FIG[p.fig]()}
+    ${p.idea ? `<div class="it mem"><b>💡</b><span><b>Ідея:</b> ${p.idea}</span></div>` : ""}
+    <ol class="steps">${p.steps.map(s => `<li>${s}</li>`).join("")}</ol>
+    <div class="ansbox">✅ <b>Відповідь:</b> ${p.ans}</div>
+    ${p.check ? `<div class="it check ${p.check.startsWith("⚠️") ? "fix" : "mem"}"><b>🔎</b><span>${p.check}</span></div>` : ""}
+    <div class="row sbtn"><button class="btn light" onclick="stepAll('${id}')">📜 Показати все</button><button class="btn go" onclick="stepNext('${id}')">👣 Наступний крок</button></div>
+  </div>`;
+}
+function stepNext(id){
+  const card = document.getElementById(id), hidden = card.querySelector(".steps li:not(.on)");
+  if (hidden) { hidden.classList.add("on"); }
+  if (!card.querySelector(".steps li:not(.on)")) { card.classList.add("done"); }
+}
+function stepAll(id){
+  const card = document.getElementById(id);
+  card.querySelectorAll(".steps li").forEach(li => li.classList.add("on"));
+  card.classList.add("done");
+}
+
+const RU_N = n => n < 5 ? "формули" : "формул";
+const main = document.getElementById("main");
+
+const navHtml = LEVELS.map((l, i) => `<a href="#g-${l.id}" style="--c:${l.c}">${l.em} ${i + 1}. ${l.name}</a>`).join("")
+  + `<a href="#tasks" style="--c:#3a86ff">🧩 Типові задачі</a><a href="solutions.html" style="--c:#8338ec">✍️ Розв'язки 26–30</a><a href="#pick" style="--c:#ffb703">🧭 Що брати?</a><a href="#links" style="--c:#8338ec">🔗 Зв'язки</a>`;
+document.getElementById("nav").innerHTML = navHtml;
+
+const hero = `<div class="card hero">
+  <b>Як вчити з цієї сторінки:</b>
+  <ol>
+    <li>Прочитай одну групу. Подивись на малюнок і знайди на ньому кожну букву з формули.</li>
+    <li>Прочитай «🧠 Запам'ятай» і розбери приклад.</li>
+    <li>Натисни <b>🙈 Перевір себе</b> (кнопка внизу праворуч). Формули сховаються. Скажи кожну вголос і торкнись, щоб перевірити.</li>
+    <li>Пройди тест цієї групи в грі.</li>
+    <li>Розбери <b>🧩 Типові задачі</b>: спробуй розв'язати, потім тисни «👣 Наступний крок».</li>
+  </ol>
+  <div class="row"><a class="btn go" href="#tasks">🧩 Типові задачі</a><a class="btn pink" href="solutions.html">✍️ Розв'язки 26–30</a><a class="btn light" href="#pick">🧭 Що дано → яку формулу брати</a><a class="btn light" href="#links">🔗 Як формули пов'язані</a></div>
+</div>`;
+
+function formulaCard(l, li, s, si){
+  const it = (ic, txt, cls = "") => txt ? `<div class="it ${cls}"><b>${ic}</b><span>${txt}</span></div>` : "";
+  return `<div class="card fc" style="--c:${l.c}">
+    <h3><span class="n">${li + 1}.${si + 1}</span>${s.t}</h3>
+    <div class="formula" onclick="this.classList.toggle('show')">${s.fm}</div>
+    ${FIG[s.fig]()}
+    ${it("📖", s.lg ? "<b>Букви:</b> " + s.lg : "")}
+    ${it("🧠", "<b>Запам'ятай:</b> " + s.mem, "mem")}
+    ${it("✏️", s.ex ? "<b>Приклад:</b> " + s.ex : "")}
+    ${it("🎯", "<b>Коли брати:</b> " + s.use)}
+    ${s.why ? `<details><summary>💡 Чому так?</summary>${s.why}</details>` : ""}
+    ${it("⚠️", s.fix ? "<b>Увага (конспект):</b> " + s.fix : "", "fix")}
+  </div>`;
+}
+
+const groups = LEVELS.map((l, li) => `<section class="grp" id="g-${l.id}" style="--c:${l.c}">
+  <div class="band"><span class="em">${l.em}</span><div><div class="k">Група ${li + 1} · ${l.slides.length} ${RU_N(l.slides.length)}</div><h2>${l.name}</h2><p>${l.intro}</p></div></div>
+  <div class="grid">${l.slides.map((s, si) => formulaCard(l, li, s, si)).join("")}</div>
+  <div class="after"><a class="btn go" href="./#quiz=${li}">🎮 Перевір себе: тест «${l.name}»</a></div>
+</section>`).join("");
+
+const colorOf = id => (LEVELS.find(l => l.id === id) || {}).c || "#2b2350";
+const pick = `<section class="grp" id="pick" style="--c:#ffb703">
+  <div class="band"><span class="em">🧭</span><div><div class="k">Шпаргалка до задач</div><h2>Що дано → яку формулу брати</h2><p>Знайди рядок, де є ТЕ, що дано в задачі.</p></div></div>
+  <div class="card" style="margin-top:14px"><table>${PICK.map(([g, f, id]) =>
+    `<tr><td>${g}</td><td><a href="#g-${id}" class="ans" style="--c:${colorOf(id)}"><span class="ans" style="--c:${colorOf(id)}">→ ${f}</span></a></td></tr>`).join("")}</table></div>
+</section>`;
+
+const links = `<section class="grp" id="links" style="--c:#8338ec">
+  <div class="band"><span class="em">🔗</span><div><div class="k">Щоб менше зубрити</div><h2>Як формули пов'язані</h2><p>Багато формул — це одна й та сама ідея. Знаєш одну — легко згадаєш іншу.</p></div></div>
+  <div class="links" style="margin-top:14px">${LINKS.map(k =>
+    `<div class="card lk"><div class="ab"><span>${k.a}</span><i>→</i><span>${k.b}</span></div><p>${k.how}</p></div>`).join("")}</div>
+</section>`;
+
+const tasks = `<section class="grp" id="tasks" style="--c:#3a86ff">
+  <div class="band"><span class="em">🧩</span><div><div class="k">Як це розв'язують</div><h2>Типові задачі з варіанту</h2><p>Спробуй розв'язати. Потім відкривай по одному кроку.</p></div></div>
+  ${TYPICAL.map((p, i) => stepCard(p, "t" + i)).join("")}
+  <div class="after"><a class="btn pink" href="solutions.html">✍️ Далі: розв'язки задач 26–30</a></div>
+</section>`;
+
+main.innerHTML = hero + groups + tasks + pick + links
+  + `<div class="foot"><a class="btn pink" href="./" style="font-size:19px;padding:16px 26px">🎮 Тепер — у гру!</a></div>`;
+
+function toggleTest(){
+  const on = document.body.classList.toggle("test");
+  document.querySelectorAll(".formula.show").forEach(f => f.classList.remove("show"));
+  document.getElementById("toggle").textContent = on ? "👀 Показати формули" : "🙈 Перевір себе";
+}
+</script>
+</body>
+</html>
