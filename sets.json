@@ -40,5 +40,13 @@
     "count": 9,
     "unit": "формул",
     "updated": "2026-11-25"
+  },
+  {
+    "slug": "english-phrasal-verbs",
+    "title": "English: Phrasal Verbs",
+    "emoji": "🔀",
+    "kind": "pairs",
+    "count": 22,
+    "updated": "2026-11-26"
   }
 ]
